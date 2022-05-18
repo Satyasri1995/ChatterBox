@@ -1,7 +1,13 @@
+import { LoginComponent } from './pages/login/login.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { SignupComponent } from './pages/signup/signup.component';
 
-const routes: Routes = [];
+const routes: Routes = [
+  {path:"",redirectTo:"ChatterBox/login",pathMatch:"full"},
+  {path:"ChatterBox/login",component:LoginComponent},
+  {path:"ChatterBox/signup",component:SignupComponent}
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

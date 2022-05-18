@@ -1,0 +1,48 @@
+<div class="flex flex-row align-items-center justify-content-center fill-h">
+  <p-card>
+    <ng-template pTemplate="title">
+      Login
+    </ng-template>
+    <ng-template pTemplate="content">
+      <form class="p-fluid" style="width: 20rem;" [formGroup]="loginForm" (ngSubmit)="onLogin()">
+        <div class="field">
+          <label for="username" class="block">E-Mail</label>
+          <input id="username" class="p-inputtext-sm" type="text" name="mail" formControlName="mail"
+            [class.ng-dirty]="loginForm.controls['mail'].invalid && (loginForm.controls['mail'].dirty||loginForm.controls['mail'].touched)"
+            [class.ng-invalid]="loginForm.controls['mail'].invalid && (loginForm.controls['mail'].dirty||loginForm.controls['mail'].touched)"
+            aria-describedby="username-help" pInputText />
+          <small id="username-help" class="block p-error" style="height:12px;">
+            <span
+              *ngIf="loginForm.controls['mail'].invalid && (loginForm.controls['mail'].dirty||loginForm.controls['mail'].touched)">
+              Enter your username to reset your password.
+            </span>
+          </small>
+        </div>
+        <div class="field">
+          <label for="password" class="block">Password</label>
+          <p-password id="password" class="p-inputtext-sm" name="password" formControlName="password"
+            [class.ng-dirty]="loginForm.controls['password'].invalid && (loginForm.controls['password'].dirty||loginForm.controls['password'].touched)"
+            [class.ng-invalid]="loginForm.controls['password'].invalid && (loginForm.controls['password'].dirty||loginForm.controls['password'].touched)"
+            password [toggleMask]="true"></p-password>
+          <small id="password-help" class="block p-error" style="min-height:12px;">
+            <span
+              *ngIf="loginForm.controls['password'].invalid && (loginForm.controls['password'].dirty||loginForm.controls['password'].touched)">
+              <ul class="ml-3">
+                <li *ngIf="loginForm.get('password')?.hasError('required')">Invalid Password.</li>
+                <li *ngIf="loginForm.get('password')?.hasError('minlength')">Password should have 8 characters.
+                </li>
+                <li *ngIf="loginForm.get('password')?.hasError('pattern')">Password should have alphanumeric,camelcase
+                  and special character</li>
+              </ul>
+            </span>
+          </small>
+        </div>
+        <p-button label="Sign-In" [disabled]="!loginForm.valid" type="submit"></p-button>
+      </form>
+      <div class="mt-1 mb-1 flex flex-row justify-content-between">
+        <span class="text-xs">Don't have an Account yet ?</span>
+        <a class="pointer text-xs" routerLink="/ChatterBox/signup">Sign-Up</a>
+      </div>
+    </ng-template>
+  </p-card>
+</div>

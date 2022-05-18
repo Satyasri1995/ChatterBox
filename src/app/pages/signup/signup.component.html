@@ -1,0 +1,61 @@
+<div class="flex flex-row align-items-center justify-content-center fill-h">
+  <p-card>
+    <ng-template pTemplate="title">
+      Login
+    </ng-template>
+    <ng-template pTemplate="content">
+      <form class="p-fluid" style="width: 20rem;" [formGroup]="signupForm" (ngSubmit)="onLogin()">
+        <div class="field">
+          <label for="username" class="block">E-Mail</label>
+          <input id="username" class="p-inputtext-sm" type="text" name="mail" formControlName="mail"
+            [class.ng-dirty]="signupForm.controls['mail'].invalid && (signupForm.controls['mail'].dirty||signupForm.controls['mail'].touched)"
+            [class.ng-invalid]="signupForm.controls['mail'].invalid && (signupForm.controls['mail'].dirty||signupForm.controls['mail'].touched)"
+            aria-describedby="username-help" pInputText />
+          <small id="username-help" class="block p-error" style="height:12px;">
+            <span
+              *ngIf="signupForm.controls['mail'].invalid && (signupForm.controls['mail'].dirty||signupForm.controls['mail'].touched)">
+              Enter your username to reset your password.
+            </span>
+          </small>
+        </div>
+        <div class="field">
+          <label for="password" class="block">Password</label>
+          <p-password id="password" class="p-inputtext-sm" name="password" formControlName="password"
+            [class.ng-dirty]="signupForm.controls['password'].invalid && (signupForm.controls['password'].dirty||signupForm.controls['password'].touched)"
+            [class.ng-invalid]="signupForm.controls['password'].invalid && (signupForm.controls['password'].dirty||signupForm.controls['password'].touched)"
+            password [toggleMask]="true"></p-password>
+          <small id="password-help" class="block p-error" style="min-height:12px;">
+            <span
+              *ngIf="signupForm.controls['password'].invalid && (signupForm.controls['password'].dirty||signupForm.controls['mail'].touched)">
+              <ul class="ml-3">
+                <li *ngIf="signupForm.get('password')?.hasError('required')">Invalid Password.</li>
+                <li *ngIf="signupForm.get('password')?.hasError('minlength')">Password should have 8 characters.
+                </li>
+                <li *ngIf="signupForm.get('password')?.hasError('pattern')">Password should have alphanumeric,camelcase
+                  and special character</li>
+              </ul>
+            </span>
+          </small>
+        </div>
+        <div class="field">
+          <label for="confirmPassword" class="block">Confirm Password</label>
+          <p-password id="confirmPassword" class="p-inputtext-sm" name="confirmPassword" formControlName="confirmPassword"
+            [class.ng-dirty]="signupForm.controls['confirmPassword'].invalid && (signupForm.controls['confirmPassword'].dirty||signupForm.controls['confirmPassword'].touched)"
+            [class.ng-invalid]="signupForm.controls['confirmPassword'].invalid && (signupForm.controls['confirmPassword'].dirty||signupForm.controls['confirmPassword'].touched)"
+            password [toggleMask]="true" [feedback]="false"></p-password>
+          <small id="confirmPassword-help" class="block p-error" style="height:12px;">
+            <span
+              *ngIf="signupForm.controls['confirmPassword'].invalid && (signupForm.controls['confirmPassword'].dirty||signupForm.controls['confirmPassword'].touched)">
+               Password and Confirm Password does not match
+            </span>
+          </small>
+        </div>
+        <p-button label="Sign-Up" [disabled]="!signupForm.valid" type="submit"></p-button>
+      </form>
+      <div class="mt-1 mb-1 flex flex-row justify-content-between">
+        <span class="text-xs">Already have an Account ?</span>
+        <a class="pointer text-xs" routerLink="/ChatterBox/login">Sign-In</a>
+      </div>
+    </ng-template>
+  </p-card>
+</div>
