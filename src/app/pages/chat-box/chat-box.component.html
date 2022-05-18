@@ -1,0 +1,52 @@
+<div class="flex flex-row align-items-center justify-content-center fill-h">
+  <div class="p-card chatbox shadow-3 flex flex-row align-items-stretch">
+    <div class="chatbox_contacts flex flex-column border-right-1 border-gray-300">
+      <div class="chatbox_contacts_header flex flex-row justify-content-between align-items-center p-2 border-bottom-1 border-gray-300">
+        <p-avatar label="U" styleClass="mr-2" [style]="{'background-color': '#9c27b0', 'color': '#ffffff'}" shape="circle"></p-avatar>
+        <a class="p-2 primary options" (click)="contactsMenu.toggle($event)" pRipple><i class="pi pi-ellipsis-v"></i></a>
+      </div>
+      <div class="chatbox_contacts_search p-fluid p-2 border-bottom-1 border-gray-300">
+        <span class="p-input-icon-left">
+          <i class="pi pi-search"></i>
+          <input type="text" class="p-inputtext-sm" pInputText placeholder="Search" />
+      </span>
+      </div>
+      <div class="chatbox_contacts_body contact_list align-self-stretch">
+        <div *ngFor="let contact of contacts" pRipple class="primary contact_list_item p-2 flex flex-row align-items-center border-bottom-1 border-gray-300">
+          <div class="contact_list_item_avatar ">
+            <p-avatar [label]="contact.name[0]" styleClass="mr-2" size="large"  shape="circle"></p-avatar>
+          </div>
+          <div class="contact_list_item_message flex flex-grow-1 flex-column justify-content-between align-self-stretch">
+            <div class="contact_list_item_message_author flex flex-row justify-content-between">
+              <div class="contact_list_item_message_author_name  text-xl font-medium">
+                {{contact.name}}
+              </div>
+              <div class="contact_list_item_message_author_time text-xs font-normal">
+                {{contact.msg.messageDate.toLocaleString()}}
+              </div>
+            </div>
+            <div class="contact_list_item_message_content flex flex-row justify-content-between">
+              <div class="contact_list_item_message_content_text  text-sm font-normal">
+                {{contact.msg.message}}
+              </div>
+              <div class="contact_list_item_message_content_unread">
+                <p-badge value="2"></p-badge>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="chatbox_messages">
+      <div class="chatbox_messages_header border-bottom-1 border-gray-300">
+
+      </div>
+      <div class="chatbox_messages_body">
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<p-menu #contactsMenu [popup]="true" [model]="contactsMenuItems"></p-menu>

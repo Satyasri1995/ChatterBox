@@ -1,0 +1,50 @@
+.chatbox {
+  width: 80vw;
+  height: 80vh;
+  overflow: hidden;
+  &_contacts {
+    flex-basis: 30%;
+    &_header {
+      height: 4rem;
+      & .options {
+        text-decoration: none;
+        border-radius: 50%;
+      }
+    }
+    &_body {
+      overflow-y: auto;
+    }
+  }
+  &_messages {
+    flex: 1;
+    &_header {
+      height: 4rem;
+    }
+  }
+}
+
+@mixin ellipses {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.contact_list_item {
+  height: 4rem;
+  &_message {
+    &_author{
+      &_name{
+        width: 170px;
+        @include ellipses;
+      }
+    }
+    &_content{
+      &_text{
+        width: 270px;
+        @include ellipses;
+        padding-top: 5px;
+      }
+    }
+
+  }
+}
