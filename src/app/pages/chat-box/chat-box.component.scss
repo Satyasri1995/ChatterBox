@@ -6,6 +6,7 @@
     flex-basis: 30%;
     &_header {
       height: 4rem;
+      min-height: 4rem;
       & .options {
         text-decoration: none;
         border-radius: 50%;
@@ -19,6 +20,13 @@
     flex: 1;
     &_header {
       height: 4rem;
+      min-height: 4rem;
+    }
+    &_body{
+      &_input{
+        height: 4rem;
+        min-height: 4rem;
+      }
     }
   }
 }
