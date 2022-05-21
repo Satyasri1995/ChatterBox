@@ -1,3 +1,6 @@
+import { IUser } from './../../interfaces/IUser';
+import { IMessage } from './../../interfaces/IMessage';
+import { IContact } from './../../interfaces/IContact';
 import { Component, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 
@@ -8,11 +11,10 @@ import { MenuItem } from 'primeng/api';
 })
 export class ChatBoxComponent implements OnInit {
   contactsMenuItems: MenuItem[];
-  contacts: {
-    name: string;
-    id: string;
-    msg: { message: string; messageDate: Date; read: boolean };
-  }[];
+  contacts: IContact[];
+  messages: IMessage[];
+  user:IUser;
+  currentChatUser!:IUser;
 
   constructor() {
     this.contactsMenuItems = [
@@ -22,76 +24,41 @@ export class ChatBoxComponent implements OnInit {
     ];
     this.contacts = [
       {
-        name: 'Dvs',
+        user:{name:"Dvs2",id:Math.random().toString(),isOnline:true},
         id: Math.random().toString(),
-        msg: { message: 'Hello', messageDate: new Date(), read: false },
-      },
-      {
-        name: 'Davuloori Sai Durga Hemanth',
-        id: Math.random().toString(),
-        msg: { message: 'Hello good morning how are doing? is everything okay?', messageDate: new Date(), read: false },
-      },
-      {
-        name: 'Dvs',
-        id: Math.random().toString(),
-        msg: { message: 'Hello', messageDate: new Date(), read: false },
-      },
-      {
-        name: 'Davuloori Sai Durga Hemanth',
-        id: Math.random().toString(),
-        msg: { message: 'Hello good morning how are doing? is everything okay?', messageDate: new Date(), read: false },
-      },
-      {
-        name: 'Dvs',
-        id: Math.random().toString(),
-        msg: { message: 'Hello', messageDate: new Date(), read: false },
-      },
-      {
-        name: 'Davuloori Sai Durga Hemanth',
-        id: Math.random().toString(),
-        msg: { message: 'Hello good morning how are doing? is everything okay?', messageDate: new Date(), read: false },
-      },
-      {
-        name: 'Dvs',
-        id: Math.random().toString(),
-        msg: { message: 'Hello', messageDate: new Date(), read: false },
-      },
-      {
-        name: 'Davuloori Sai Durga Hemanth',
-        id: Math.random().toString(),
-        msg: { message: 'Hello good morning how are doing? is everything okay?', messageDate: new Date(), read: false },
-      },
-      {
-        name: 'Dvs',
-        id: Math.random().toString(),
-        msg: { message: 'Hello', messageDate: new Date(), read: false },
-      },
-      {
-        name: 'Davuloori Sai Durga Hemanth',
-        id: Math.random().toString(),
-        msg: { message: 'Hello good morning how are doing? is everything okay?', messageDate: new Date(), read: false },
-      },
-      {
-        name: 'Dvs',
-        id: Math.random().toString(),
-        msg: { message: 'Hello', messageDate: new Date(), read: false },
-      },
-      {
-        name: 'Davuloori Sai Durga Hemanth',
-        id: Math.random().toString(),
-        msg: { message: 'Hello good morning how are doing? is everything okay?', messageDate: new Date(), read: false },
-      },
-      {
-        name: 'Dvs',
-        id: Math.random().toString(),
-        msg: { message: 'Hello', messageDate: new Date(), read: false },
-      },
-      {
-        name: 'Davuloori Sai Durga Hemanth',
-        id: Math.random().toString(),
-        msg: { message: 'Hello good morning how are doing? is everything okay?', messageDate: new Date(), read: false },
+        lastMessage: {
+          id: Math.random.toString(),
+          sentDate: new Date(),
+          receivedDate: new Date(),
+          readDate: new Date(),
+          text: 'Hello ' + Math.random().toString(),
+          user:{name:"Dvs2",id:Math.random().toString(),isOnline:true}
+        },
       },
     ];
+    this.messages = [
+      {
+        id: Math.random.toString(),
+        sentDate: new Date(),
+        receivedDate: new Date(),
+        readDate: new Date(),
+        text: 'Hello ' + Math.random().toString(),
+        user:{name:"Dvs2",id:Math.random().toString(),isOnline:true}
+      },
+      {
+        id: Math.random.toString(),
+        sentDate: new Date(),
+        receivedDate: new Date(),
+        readDate: new Date(),
+        text: 'Hello ' + Math.random().toString(),
+        user:{name:"Dvs",id:"123456789",isOnline:true}
+      },
+    ];
+    this.user={
+      name:"Dvs",
+      id:"123456789",
+      isOnline:true
+    }
   }
 
   ngOnInit(): void {}
