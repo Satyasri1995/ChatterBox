@@ -3,7 +3,7 @@
     <div class="chatbox_contacts flex flex-column border-right-1 border-gray-300">
       <div
         class="chatbox_contacts_header flex flex-row justify-content-between align-items-center p-2 border-bottom-1 border-gray-300">
-        <p-avatar size="large" [label]="user.name[0]" styleClass="mr-2" [style]="{'background-color': '#9c27b0', 'color': '#ffffff'}"
+        <p-avatar size="large" [label]="user.mail[0]" styleClass="mr-2" [style]="{'background-color': '#9c27b0', 'color': '#ffffff'}"
           shape="circle"></p-avatar>
         <a class="p-2 primary options" (click)="contactsMenu.toggle($event)" pRipple><i
             class="pi pi-ellipsis-v"></i></a>
@@ -18,13 +18,13 @@
         <div *ngFor="let contact of contacts" pRipple (click)="currentChatUser=contact.user"
           class="primary contact_list_item p-2 flex flex-row align-items-center border-bottom-1 border-gray-300">
           <div class="contact_list_item_avatar ">
-            <p-avatar [label]="contact.user.name[0]" styleClass="mr-2" size="large" shape="circle"></p-avatar>
+            <p-avatar [label]="contact.user.mail[0]" styleClass="mr-2" size="large" shape="circle"></p-avatar>
           </div>
           <div
             class="contact_list_item_message flex flex-grow-1 flex-column justify-content-between align-self-stretch">
             <div class="contact_list_item_message_author flex flex-row justify-content-between">
               <div class="contact_list_item_message_author_name  text-xl font-medium">
-                {{contact.user.name}}
+                {{contact.user.mail}}
               </div>
               <div class="contact_list_item_message_author_time text-xs font-normal">
                 {{contact.lastMessage.receivedDate?.toLocaleString()}}
@@ -47,10 +47,10 @@
     </div>
     <div class="chatbox_messages flex flex-column" *ngIf="currentChatUser">
       <div class="chatbox_messages_header border-bottom-1 border-gray-300 flex flex-row p-2">
-        <p-avatar size="large" [label]="currentChatUser.name[0]" styleClass="mr-2" shape="circle"></p-avatar>
+        <p-avatar size="large" [label]="currentChatUser.mail[0]" styleClass="mr-2" shape="circle"></p-avatar>
         <div class="chatbox_messages_header_user flex flex-column justify-content-around align-items-center">
           <div class="chatbox_messages_header_user_name text-xl text-medium">
-            {{currentChatUser.name}}
+            {{currentChatUser.mail}}
           </div>
           <div class="chatbox_messages_header_user_status flex flex-row">
             <i class="pi pi-circle-fill" [class.text-red-500]="!currentChatUser.isOnline" [class.text-green-500]="currentChatUser.isOnline"></i>&nbsp;<span>Online</span>
@@ -62,7 +62,7 @@
           <div *ngFor="let msg of messages" [class.bg-blue-500]="msg.user.id!==user.id" [class.align-self-start]="msg.user.id!==user.id" [class.align-self-end]="msg.user.id===user.id" [class.text-white]="msg.user.id!==user.id" [class.align-items-start]="msg.user.id!==user.id" [class.align-items-end]="msg.user.id===user.id"
             class="chatbox_messages_body_ballons_user p-card  shadow-3  p-2 m-2 inline-flex flex-column ">
             <div class="chatbox_messages_body_ballons_user_name flex flex-row justify-content-between align-items-end text-xs text-bold pb-2">
-              <span class="text-sm mr-2">{{msg.user.name}}</span>
+              <span class="text-sm mr-2">{{msg.user.mail}}</span>
               <span>{{msg.readDate?.toLocaleString()||msg.receivedDate?.toLocaleString()||msg.sentDate?.toLocaleString()}}</span>&nbsp;&nbsp;&nbsp;
               <i class="pi" [class.pi-check]="msg.sentDate&&(!msg.readDate && !msg.receivedDate)" [class.text-green-500]="msg.readDate && msg.receivedDate" [class.pi-check-circle]="msg.readDate || msg.receivedDate"></i>
             </div>
@@ -88,3 +88,12 @@
 
 
 <p-menu #contactsMenu [popup]="true" [model]="contactsMenuItems"></p-menu>
+<p-dialog header="Add Contact" id="contact" [(visible)]="showAddContact">
+  <div class="flex flex-column p-fluid" style="width: 20rem;">
+    <div class="field">
+      <label for="username" class="block">E-Mail</label>
+      <p-autoComplete [showEmptyMessage]="true" emptyMessage="No records found." field="mail" (onSelect)="onSelected($event)"  [suggestions]="searchResultUsers" (completeMethod)="search($event.query)"></p-autoComplete>
+    </div>
+    <button pButton icon="pi pi-plus" iconPos="left" type="button" label="Add Contact" [disabled]="!selectedSearchUser"></button>
+  </div>
+</p-dialog>

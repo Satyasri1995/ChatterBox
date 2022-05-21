@@ -1,5 +1,5 @@
 export interface IUser{
-  name:string;
+  mail:string;
   id:string;
   isOnline:boolean;
 }

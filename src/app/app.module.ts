@@ -8,7 +8,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { SignupComponent } from './pages/signup/signup.component';
 
 import {CardModule} from 'primeng/card';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {InputTextModule} from 'primeng/inputtext';
 import {PasswordModule} from 'primeng/password';
 import {ButtonModule} from 'primeng/button';
@@ -18,6 +18,8 @@ import {RippleModule} from 'primeng/ripple';
 import {OverlayPanelModule} from 'primeng/overlaypanel';
 import {MenuModule} from 'primeng/menu';
 import {BadgeModule} from 'primeng/badge';
+import {DialogModule} from 'primeng/dialog';
+import {AutoCompleteModule} from 'primeng/autocomplete';
 
 @NgModule({
   declarations: [
@@ -28,7 +30,9 @@ import {BadgeModule} from 'primeng/badge';
   ],
   imports: [
     BrowserModule,
+    FormsModule,
     BrowserAnimationsModule,
+    DialogModule,
     AppRoutingModule,
     CardModule,
     InputTextModule,
@@ -36,6 +40,7 @@ import {BadgeModule} from 'primeng/badge';
     ReactiveFormsModule,
     AvatarModule,
     ButtonModule,
+    AutoCompleteModule,
     OverlayPanelModule,
     RippleModule,
     MenuModule,
