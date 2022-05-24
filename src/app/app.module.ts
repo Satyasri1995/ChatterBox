@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { ErrorHandler, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -20,6 +20,12 @@ import {MenuModule} from 'primeng/menu';
 import {BadgeModule} from 'primeng/badge';
 import {DialogModule} from 'primeng/dialog';
 import {AutoCompleteModule} from 'primeng/autocomplete';
+import { LocationStrategy, HashLocationStrategy } from '@angular/common';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { MyErrorHandler } from './services/util/ErrorHandler';
+import { HttpErrorInterceptor } from './services/util/http-interceptors';
+import {ToastModule} from 'primeng/toast';
 
 @NgModule({
   declarations: [
@@ -31,6 +37,7 @@ import {AutoCompleteModule} from 'primeng/autocomplete';
   imports: [
     BrowserModule,
     FormsModule,
+    ToastModule,
     BrowserAnimationsModule,
     DialogModule,
     AppRoutingModule,
@@ -46,7 +53,23 @@ import {AutoCompleteModule} from 'primeng/autocomplete';
     MenuModule,
     BadgeModule
   ],
-  providers: [],
+  providers: [
+    ConfirmationService,
+    {
+      provide: LocationStrategy,
+      useClass: HashLocationStrategy,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpErrorInterceptor,
+      multi: true,
+    },
+    {
+      provide: ErrorHandler,
+      useClass: MyErrorHandler,
+    },
+    MessageService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

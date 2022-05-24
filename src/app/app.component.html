@@ -1,1 +1,14 @@
 <router-outlet></router-outlet>
+<p-toast key="global" position="top-right"></p-toast>
+<p-toast key="multipleError">
+  <ng-template let-message pTemplate="message">
+    <div class="p-flex p-flex-column" style="flex: 1;">
+      <b>{{message.summary}}</b>
+        <ul class="p-ml-4">
+          <li *ngFor="let msg of message.data">
+              {{msg}}
+          </li>
+        </ul>
+    </div>
+</ng-template>
+</p-toast>
