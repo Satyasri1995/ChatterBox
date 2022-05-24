@@ -1,5 +1,5 @@
-import { IUser } from './IUser';
-import { IMessage } from "./IMessage";
+import { IUser } from './User';
+import { IMessage } from "./Message";
 
 export interface IContact{
   id:string;

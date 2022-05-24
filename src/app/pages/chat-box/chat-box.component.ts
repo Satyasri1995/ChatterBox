@@ -1,6 +1,6 @@
-import { IUser } from './../../interfaces/IUser';
-import { IMessage } from './../../interfaces/IMessage';
-import { IContact } from './../../interfaces/IContact';
+import { IUser } from '../../Models/User';
+import { IMessage } from '../../Models/Message';
+import { IContact } from '../../Models/Contact';
 import { Component, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 
