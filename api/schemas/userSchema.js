@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const timestamp = require('mongoose-timestamp');
 const Schema = mongoose.Schema;
+const contactSchema = require("./../schemas/contactShema");
 
 const userSchema = new Schema({
   mail:{
@@ -10,7 +11,10 @@ const userSchema = new Schema({
   password:{
     type:String,
     required:true
-  }
+  },
+  contacts:[
+    contactSchema
+  ]
 });
 
 

@@ -18,12 +18,11 @@ const contactSchema = new Schema({
   },
   conversation:{
     type:mongoose.SchemaTypes.ObjectId,
-    required:true
+    required:true,
+    ref:'conversation'
   }
 });
 
 contactSchema.plugin(timestamp);
 
-const contactSchemaModel = mongoose.model("contact", contactSchema);
-
-module.exports = contactSchemaModel;
+module.exports = contactSchema;
