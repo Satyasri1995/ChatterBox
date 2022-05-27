@@ -30,15 +30,6 @@ router.post(
   catchError(authController.signup)
 );
 
-router.post(
-  "/forgotpassword",
-  check("mail")
-    .normalizeEmail()
-    .isEmail()
-    .withMessage("Please Enter a valid E-Mail"),
-  validationController.validator,
-  catchError(authController.forgotPassword)
-);
 
 
 
