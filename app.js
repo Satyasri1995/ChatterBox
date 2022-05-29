@@ -36,14 +36,12 @@ app.use(
 app.use(compress());
 app.use(helmet());
 
-app.use("/ChatterBox",apiRoute);
+app.use("/ChatterBox", apiRoute);
 
 app.use("*", (req, res, next) => {
   res.status(404);
   res.json({ message: "Page Not Found" });
 });
-
-
 
 mongoose
   .connect(process.env.DATABASE, {
@@ -52,21 +50,21 @@ mongoose
   })
   .then((result) => {
     if (result) {
-      //   const server = http.createServer(app);
-      //   const io = require("./server/utils/socket").init(server, {
-      //     path: "/socket.io",
-      //     serveClient: false,
-      //     // below are engine.IO options
-      //     pingInterval: 10000,
-      //     pingTimeout: 5000,
-      //     cookie: false,
-      //     cors: {
-      //       origin: process.env.CLIENT_DOMAIN + ":" + process.env.CLIENT_PORT,
-      //     },
-      //   });
-      //   server.listen(process.env.PORT || 3000);
+      const server = http.createServer(app);
+      const io = require("./api/socket").init(server, {
+        path: "/socket.io",
+        serveClient: false,
+        // below are engine.IO options
+        pingInterval: 10000,
+        pingTimeout: 5000,
+        cookie: false,
+        cors: {
+          origin: process.env.CLIENT_DOMAIN + ":" + process.env.CLIENT_PORT,
+        },
+      });
+      server.listen(process.env.PORT || 3000);
       console.log("Connected to Database !...");
-      //   io.on("connection", onConnectionHandler);
+      io.on("connection", onConnectionHandler);
     } else {
       console.log("Connection to Database Failed !...");
     }
