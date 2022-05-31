@@ -4,7 +4,6 @@ const mongoose = require("mongoose");
 const session = require("express-session");
 const compress = require("compression");
 const helmet = require("helmet");
-const morgan = require("morgan");
 const fs = require("fs");
 const cors = require("cors");
 require("dotenv").config();

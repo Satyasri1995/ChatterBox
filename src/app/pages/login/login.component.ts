@@ -1,5 +1,8 @@
+import { AuthLoginRest } from './../../store/auth/auth.actions';
+import { AppState } from './../../store/app.store';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-login',
@@ -9,7 +12,7 @@ import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder,private store:Store<AppState>) {}
 
   /*
       ^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$
@@ -43,6 +46,6 @@ export class LoginComponent implements OnInit {
   }
 
   onLogin(){
-    console.log(this.loginForm.value)
+    this.store.dispatch(AuthLoginRest(this.loginForm.value));
   }
 }
