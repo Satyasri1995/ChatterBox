@@ -4,22 +4,50 @@ const bcrypt = require("bcrypt");
 const User = require("../models/user");
 const Login = require("../models/login");
 const Response = require("../models/response");
-
+const crypto = require("crypto");
+const SignUp = require("../models/signup");
 
 exports.login = async (req, res, next) => {
   const cred = new Login(req.body);
   const user = await UserSchemaModel.findOne().where("mail").equals(cred.mail);
+  const token = await crypto.randomBytes(64).toString("hex");
+  const response = { user: {}, isLoggedIn: false, token: "" };
   if (user) {
     const valid = bcrypt.compareSync(cred.password, user.password);
     if (valid) {
       req.session.user = user;
       const muser = new User(user);
-      return res.json(new Response(true, "success", null, null, muser));
+      response.user = muser;
+      response.isLoggedIn = true;
+      response.token = token;
+      return res.json(new Response(true, "success", null, null, response));
     } else {
-      throw new Error("Please enter correct password");
+      response.user = {};
+      response.isLoggedIn = false;
+      response.token = "";
+      return res.json(
+        new Response(
+          false,
+          "error",
+          "Authentication Failed",
+          "Invalid password",
+          response
+        )
+      );
     }
   } else {
-    throw new Error("Please enter correct Mail");
+    response.user = {};
+    response.isLoggedIn = false;
+    response.token = "";
+    return res.json(
+      new Response(
+        false,
+        "error",
+        "Authentication Failed",
+        "Please enter a valid mail",
+        response
+      )
+    );
   }
 };
 

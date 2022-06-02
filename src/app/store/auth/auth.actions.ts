@@ -15,7 +15,7 @@ export const AuthLoginRest = createAction(
 
 export const AuthSignUpRest = createAction(
   '[SignUp] Create new account/user',
-  props<{mail:string,password:string,isAdmin:boolean}>()
+  props<{mail:string,password:string}>()
 )
 
 export const AuthLogout = createAction('[Logout] logout user');

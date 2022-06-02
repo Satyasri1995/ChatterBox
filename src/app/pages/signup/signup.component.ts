@@ -1,5 +1,8 @@
+import { AuthSignUpRest } from './../../store/auth/auth.actions';
+import { AppState } from 'src/app/store/app.store';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-signup',
@@ -9,7 +12,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 export class SignupComponent implements OnInit {
   signupForm!: FormGroup;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder,private store:Store<AppState>) {}
 
   /*
       ^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$
@@ -71,7 +74,8 @@ export class SignupComponent implements OnInit {
       ?.classList.add('p-input-icon-right');
   }
 
-  onLogin() {
-    console.log(this.signupForm.value);
+  onSignup() {
+    console.log(this.signupForm.value)
+    this.store.dispatch(AuthSignUpRest(this.signupForm.value));
   }
 }

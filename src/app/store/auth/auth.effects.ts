@@ -7,6 +7,7 @@ import { AuthLogin, AuthLoginRest, AuthSignUpRest } from './auth.actions';
 import { environment } from 'src/environments/environment';
 import { Toast } from 'src/app/Models/Toast';
 import { RedirectToPage, ShowToast } from '../ui/ui.actions';
+import { RouterState } from '@angular/router';
 
 
 @Injectable()
@@ -18,7 +19,7 @@ export class AuthEffects {
       ofType(AuthLoginRest),
       switchMap((payload) =>
         this.http
-          .post(environment.api + '/login', {
+          .post(environment.api + '/auth/login', {
             mail: payload.mail,
             password: payload.password,
           })
@@ -41,18 +42,22 @@ export class AuthEffects {
       ofType(AuthSignUpRest),
       switchMap((payload) =>
         this.http
-          .post(environment.api + '/signup', {
+          .post(environment.api + '/auth/signup', {
             mail: payload.mail,
-            password: payload.password,
-            isAdmin: payload.isAdmin,
+            password: payload.password
           })
           .pipe(
             mergeMap((response: any) =>{
               let toast=new Toast(response);
               toast.show=true;
+              if(toast.severity==='success'){
+                return  [
+                  ShowToast({ toast: toast }),
+                  RedirectToPage({page:"/"})
+                ];
+              }
               return  [
                 ShowToast({ toast: toast }),
-                RedirectToPage({page:"/"})
               ];
             })
           )

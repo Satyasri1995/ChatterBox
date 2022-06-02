@@ -1,3 +1,6 @@
+import { UIEffects } from './store/ui/ui.effects';
+import { AuthEffects } from './store/auth/auth.effects';
+import { AppReducer } from './store/app.store';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -21,11 +24,13 @@ import {BadgeModule} from 'primeng/badge';
 import {DialogModule} from 'primeng/dialog';
 import {AutoCompleteModule} from 'primeng/autocomplete';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { MyErrorHandler } from './services/util/ErrorHandler';
 import { HttpErrorInterceptor } from './services/util/http-interceptors';
 import {ToastModule} from 'primeng/toast';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
 
 @NgModule({
   declarations: [
@@ -51,7 +56,10 @@ import {ToastModule} from 'primeng/toast';
     OverlayPanelModule,
     RippleModule,
     MenuModule,
-    BadgeModule
+    BadgeModule,
+    HttpClientModule,
+    StoreModule.forRoot(AppReducer),
+    EffectsModule.forRoot([AuthEffects,UIEffects])
   ],
   providers: [
     ConfirmationService,

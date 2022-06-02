@@ -6,7 +6,7 @@ import { of, switchMap, tap, mergeMap } from 'rxjs';
 import { ResetToast, ShowToast, RedirectToPage } from './ui.actions';
 import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { IToast } from 'src/app/Models/Toast';
+import { IToast, Toast } from 'src/app/Models/Toast';
 
 
 @Injectable()
@@ -18,9 +18,12 @@ export class UIEffects{
    return this.actions$.pipe(
       ofType(ShowToast),
       switchMap((payload)=>{
-        let toast:IToast=payload.toast;
+        let toast:IToast=new Toast(payload.toast);
         if(toast.show){
           this.msg.clear();
+          if(toast.data.length){
+            toast.key="multipleError"
+          }
           this.msg.add(toast);
         }
         return of(ResetToast());

@@ -5,7 +5,8 @@ export interface IToast{
   key:string,
   sticky:boolean,
   life:number,
-  show:boolean
+  show:boolean,
+  data:string[]
 }
 
 export class Toast{
@@ -16,6 +17,7 @@ export class Toast{
   sticky:boolean;
   life:number;
   show:boolean;
+  data:string[];
   constructor(data?:IToast){
     this.severity=data?data.severity?data.severity:'error':'error';
     this.detail=data?data.detail?data.detail:'Something went wrong':'Something went wrong',
@@ -24,5 +26,6 @@ export class Toast{
     this.sticky=data?data.sticky?data.sticky:false:false,
     this.life=data?data.life?data.life:3000:3000;
     this.show=data?data.show:false;
+    this.data=data?data.data:[];
   }
 }

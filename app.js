@@ -4,15 +4,15 @@ const mongoose = require("mongoose");
 const session = require("express-session");
 const compress = require("compression");
 const helmet = require("helmet");
-const fs = require("fs");
 const cors = require("cors");
 require("dotenv").config();
 const http = require("http");
 const app = express();
 const apiRoute = require("./api/apiRoute");
+const { errorControl } = require("./api/controllers/errorController");
 
 app.use(express.static(path.join(__dirname, "dist")));
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(
   cors({
@@ -42,6 +42,8 @@ app.use("*", (req, res, next) => {
   res.json({ message: "Page Not Found" });
 });
 
+app.use(errorControl);
+
 mongoose
   .connect(process.env.DATABASE, {
     useNewUrlParser: true,
@@ -63,7 +65,7 @@ mongoose
       });
       server.listen(process.env.PORT || 3000);
       console.log("Connected to Database !...");
-      io.on("connection", onConnectionHandler);
+     // io.on("connection", onConnectionHandler);
     } else {
       console.log("Connection to Database Failed !...");
     }
