@@ -5,11 +5,13 @@ const Schema = mongoose.Schema;
 const messageSchema = new Schema({
   sender:{
     type:mongoose.SchemaTypes.ObjectId,
-    required:true
+    required:true,
+    ref:"user"
   },
   receiver:{
     type:mongoose.SchemaTypes.ObjectId,
-    required:true
+    required:true,
+    ref:"user"
   },
   sent:{
     type:mongoose.SchemaTypes.Boolean,
