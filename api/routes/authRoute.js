@@ -21,12 +21,6 @@ router.post(
     .normalizeEmail()
     .isEmail()
     .withMessage("Please Enter a valid E-Mail"),
-  check("confirmPassword").custom(async (confirmPassword, { req }) => {
-    if (confirmPassword !== req.body.password) {
-      console.log(confirmPassword+":"+password)
-      throw new Error("Password confirmation is incorrect");
-    }
-  }),
   validationController.validator,
   catchError(authController.signup)
 );

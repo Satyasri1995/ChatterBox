@@ -75,7 +75,6 @@ exports.signup = async (req, res, next) => {
   user.mail = cred.mail;
   const hashPassword = bcrypt.hashSync(cred.password, 10);
   user.password = hashPassword;
-  user.prime = false;
   const newUser = await user.save();
   const muser = new User(newUser);
   if (newUser) {

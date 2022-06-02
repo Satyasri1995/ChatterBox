@@ -56,7 +56,7 @@ export class UIEffects{
         if(payload.auth){
           if(payload.auth.isLoggedIn){
             return [
-              RedirectToPage({page:"/home/quizlist"})
+              RedirectToPage({page:"/ChatterBox/chatBox"})
             ]
           }
         }
