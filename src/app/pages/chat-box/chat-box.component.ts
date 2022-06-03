@@ -1,5 +1,8 @@
-import { IUser } from './../../Models/User';
-import { userSelector } from './../../store/auth/auth.selectors';
+import { IUser, User } from './../../Models/User';
+import {
+  userContactsSelector,
+  userSelector,
+} from './../../store/auth/auth.selectors';
 import { Store } from '@ngrx/store';
 import { IMessage } from '../../Models/Message';
 import { IContact } from '../../Models/Contact';
@@ -24,6 +27,7 @@ export class ChatBoxComponent implements OnInit {
   searchResultUsers: IUser[];
   selectedSearchUser!: IUser;
   userSub!: Subscription;
+  contactsSub!: Subscription;
 
   constructor(private store: Store<AppState>) {
     this.searchResultUsers = [];
@@ -35,20 +39,12 @@ export class ChatBoxComponent implements OnInit {
     ];
     this.contacts = [];
     this.messages = [];
-    this.user = {
-      mail: 'Dvs',
-      id: '123456789',
-      isOnline: true,
-      contacts:[]
-    };
+    this.user = new User();
     this.showAddContact = false;
   }
 
   search(query: string) {
-    setTimeout(() => {
-      this.searchResultUsers = [
-      ];
-    }, 1000);
+
   }
 
   onSelected(event: IUser) {
@@ -61,10 +57,16 @@ export class ChatBoxComponent implements OnInit {
       .subscribe((user: IUser) => {
         this.user = user;
       });
+    this.contactsSub = this.store
+      .pipe(map((state) => userContactsSelector(state)))
+      .subscribe((contacts: IContact[]) => {
+        this.contacts = contacts;
+      });
   }
 
-  ngOnDestroy(){
-    this.userSub.unsubscribe();
+  ngOnDestroy() {
+    this.userSub?.unsubscribe();
+    this.contactsSub?.unsubscribe();
   }
 
   ngAfterViewChecked() {

@@ -1,3 +1,4 @@
+import { IToast } from './../../Models/Toast';
 import { Loading, ShowToast, ResetToast } from './ui.actions';
 
 import {  createReducer, on } from '@ngrx/store';
@@ -6,7 +7,7 @@ import { Toast } from 'src/app/Models/Toast';
 
 const initialState = {
   loading: false,
-  toast:new Toast()
+  toast:<IToast>new Toast()
 };
 
 export const UIReducer = createReducer(

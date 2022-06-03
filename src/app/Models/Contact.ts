@@ -1,3 +1,4 @@
+import { IConversation } from './Conversation';
 import { IUser } from './User';
 import { IMessage } from "./Message";
 
@@ -7,7 +8,7 @@ export interface IContact{
   lastMessage:IMessage;
   updatedAt:Date;
   createdAt:Date;
-  conversation:any;
+  conversation:IConversation;
 }
 
 export class Contact{
@@ -16,7 +17,7 @@ export class Contact{
   lastMessage:IMessage|null;
   updatedAt:Date|undefined;
   createdAt:Date|undefined;
-  conversation:any|null;
+  conversation:IConversation|null;
   constructor(data?:IContact){
     this.id=data?data.id:"";
     this.user=data?data.user:null;

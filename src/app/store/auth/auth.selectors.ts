@@ -1,8 +1,7 @@
-import { createSelector } from "@ngrx/store";
-import { IUser } from "src/app/Models/User";
-import { AppState } from "../app.store";
-import { AuthState } from "../states";
-
+import { createSelector } from '@ngrx/store';
+import { IUser } from 'src/app/Models/User';
+import { AppState } from '../app.store';
+import { AuthState } from '../states';
 
 export const authSelector = (state: AppState) => state.auth;
 
@@ -11,17 +10,19 @@ export const userSelector = createSelector(
   (state: AuthState) => state.user
 );
 
-export const userIdSelector=createSelector(
+export const userIdSelector = createSelector(
   userSelector,
-  (state:IUser)=>state.id
-)
-export const userMailSelector=createSelector(
+  (state: IUser) => state.id
+);
+export const userMailSelector = createSelector(
   userSelector,
-  (state:IUser)=>state.mail
-)
+  (state: IUser) => state.mail
+);
 
-
-
+export const userContactsSelector = createSelector(
+  userSelector,
+  (state: IUser) => state.contacts
+);
 
 export const isLoggedInSelector = createSelector(
   authSelector,
@@ -30,5 +31,5 @@ export const isLoggedInSelector = createSelector(
 
 export const validUserSelector = createSelector(
   userSelector,
-  (state:IUser)=>!!state.id
-)
+  (state: IUser) => !!state.id
+);
