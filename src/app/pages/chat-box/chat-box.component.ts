@@ -1,3 +1,4 @@
+import { messageSelector } from './../../store/chat/chat.selectors';
 import { IUser, User } from './../../Models/User';
 import {
   userContactsSelector,
@@ -28,6 +29,7 @@ export class ChatBoxComponent implements OnInit {
   selectedSearchUser!: IUser;
   userSub!: Subscription;
   contactsSub!: Subscription;
+  messagesSub!: Subscription;
 
   constructor(private store: Store<AppState>) {
     this.searchResultUsers = [];
@@ -43,9 +45,7 @@ export class ChatBoxComponent implements OnInit {
     this.showAddContact = false;
   }
 
-  search(query: string) {
-
-  }
+  search(query: string) {}
 
   onSelected(event: IUser) {
     this.selectedSearchUser = event;
@@ -62,11 +62,17 @@ export class ChatBoxComponent implements OnInit {
       .subscribe((contacts: IContact[]) => {
         this.contacts = contacts;
       });
+    this.messagesSub = this.store
+      .pipe(map((state)=>messageSelector(state)))
+      .subscribe((messages: IMessage[]) => {
+        this.messages=messages;
+      });
   }
 
   ngOnDestroy() {
     this.userSub?.unsubscribe();
     this.contactsSub?.unsubscribe();
+    this.messagesSub?.unsubscribe();
   }
 
   ngAfterViewChecked() {

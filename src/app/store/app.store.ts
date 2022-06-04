@@ -8,8 +8,8 @@ import { AuthState, UIState, ChatState } from './states';
 
 export interface AppState {
   auth: AuthState;
-  chat:ChatState;
   ui: UIState;
+  chat:ChatState;
 }
 
 export const AppReducer: ActionReducerMap<AppState> = {
