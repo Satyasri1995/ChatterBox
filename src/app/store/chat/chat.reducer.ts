@@ -1,5 +1,5 @@
 import { IContact } from './../../Models/Contact';
-import { SelectContact, UpdateMessages } from './chat.actions';
+import { SelectContact, UpdateMessage, UpdateMessages } from './chat.actions';
 import { createReducer, on } from '@ngrx/store';
 import { Conversation, IConversation } from './../../Models/Conversation';
 import { Contact } from "src/app/Models/Contact";
@@ -22,6 +22,15 @@ export const ChatReducer = createReducer(
     return {
       ...state,
       conversation:payload.conversation
+    }
+  }),
+  on(UpdateMessage,(state,payload)=>{
+    const msgIdx = state.conversation.messages.findIndex((msg)=>msg.id===payload.message.id);
+    if(msgIdx>=0){
+      state.conversation.messages[msgIdx]=payload.message;
+    }
+    return {
+      ...state
     }
   })
 )

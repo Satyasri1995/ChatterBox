@@ -11,6 +11,11 @@ export const contactSelector = createSelector(
   (state: ChatState) => state.contact
 );
 
+export const currentChatUserSelector = createSelector(
+  contactSelector,
+  (state: IContact) => state.user
+);
+
 export const ConversationSelector = createSelector(
   chatSelector,
   (state: ChatState) => state.conversation

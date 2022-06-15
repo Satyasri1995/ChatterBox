@@ -1,16 +1,22 @@
-import { messageSelector } from './../../store/chat/chat.selectors';
+import { SocketService } from './../../services/util/socket.service';
+import { SelectContact, UpdateMessage } from './../../store/chat/chat.actions';
+import {
+  messageSelector,
+  currentChatUserSelector,
+} from './../../store/chat/chat.selectors';
 import { IUser, User } from './../../Models/User';
 import {
   userContactsSelector,
   userSelector,
 } from './../../store/auth/auth.selectors';
 import { Store } from '@ngrx/store';
-import { IMessage } from '../../Models/Message';
+import { IMessage, Message } from '../../Models/Message';
 import { IContact } from '../../Models/Contact';
 import { Component, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { AppState } from 'src/app/store/app.store';
 import { Subscription, map } from 'rxjs';
+import { IIOMessage } from 'src/app/Models/IOMessage';
 
 @Component({
   selector: 'app-chat-box',
@@ -30,8 +36,13 @@ export class ChatBoxComponent implements OnInit {
   userSub!: Subscription;
   contactsSub!: Subscription;
   messagesSub!: Subscription;
+  currentChatUserSub!: Subscription;
+  conversationUpdateSub!: Subscription;
 
-  constructor(private store: Store<AppState>) {
+  constructor(
+    private store: Store<AppState>,
+    private socketService: SocketService
+  ) {
     this.searchResultUsers = [];
     this.searchResult = 'Enter mail in above field to find contact';
     this.contactsMenuItems = [
@@ -63,16 +74,44 @@ export class ChatBoxComponent implements OnInit {
         this.contacts = contacts;
       });
     this.messagesSub = this.store
-      .pipe(map((state)=>messageSelector(state)))
+      .pipe(map((state) => messageSelector(state)))
       .subscribe((messages: IMessage[]) => {
-        this.messages=messages;
+        this.messages = messages;
       });
+    this.currentChatUserSub = this.store
+      .pipe(map((state) => currentChatUserSelector(state)))
+      .subscribe((user: IUser) => {
+        this.currentChatUser = user;
+      });
+  }
+
+  setCurrentChatUser(contact: IContact) {
+    this.store.dispatch(SelectContact({ contact: contact }));
+    this.reSubScribeConversationUpdate(contact.conversation.id);
+  }
+
+  reSubScribeConversationUpdate(id: string) {
+    this.conversationUpdateSub?.unsubscribe();
+    this.conversationUpdateSub = this.socketService
+      .getSocket()
+      .fromEvent<IIOMessage>(`conversation:${id}:update`)
+      .subscribe((ioMessage: IIOMessage) => {
+        this.store.dispatch(UpdateMessage({message:ioMessage.message}));
+      });
+  }
+
+  sendMessage(message: string) {
+    const newMsg = new Message();
+    newMsg.message = message;
+    newMsg.sender = this.user;
+    newMsg.receiver = this.currentChatUser;
   }
 
   ngOnDestroy() {
     this.userSub?.unsubscribe();
     this.contactsSub?.unsubscribe();
     this.messagesSub?.unsubscribe();
+    this.currentChatUserSub?.unsubscribe();
   }
 
   ngAfterViewChecked() {

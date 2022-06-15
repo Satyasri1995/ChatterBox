@@ -13,17 +13,17 @@ export interface IContact{
 
 export class Contact{
   id:string;
-  user:IUser|null;
-  lastMessage:IMessage|null;
+  user:IUser|undefined;
+  lastMessage:IMessage|undefined;
   updatedAt:Date|undefined;
   createdAt:Date|undefined;
-  conversation:IConversation|null;
+  conversation:IConversation|undefined;
   constructor(data?:IContact){
     this.id=data?data.id:"";
-    this.user=data?data.user:null;
-    this.lastMessage=data?data.lastMessage:null;
+    this.user=data?data.user:undefined;
+    this.lastMessage=data?data.lastMessage:undefined;
     this.createdAt=data?data.createdAt:undefined;
     this.updatedAt=data?data.updatedAt:undefined;
-    this.conversation=data?data.conversation:null;
+    this.conversation=data?data.conversation:undefined;
   }
 }

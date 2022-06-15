@@ -15,10 +15,10 @@ export interface IMessage{
 
 export class Message{
   id:string;
-  sender:IUser|null;
+  sender:IUser|undefined;
   sent:boolean;
   sentDate:Date|undefined;
-  receiver:IUser|null;
+  receiver:IUser|undefined;
   received:boolean;
   receivedDate:Date|undefined;
   read:boolean;
@@ -26,10 +26,10 @@ export class Message{
   message:string;
   constructor(data?:IMessage){
     this.id=data?data.id:"";
-    this.sender=data?data.sender:null;
+    this.sender=data?data.sender:undefined;
     this.sent=data?data.sent:false;
     this.sentDate=data?data.sentDate:undefined;
-    this.receiver=data?data.receiver:null;
+    this.receiver=data?data.receiver:undefined;
     this.received=data?data.received:false;
     this.receivedDate=data?data.receivedDate:undefined;
     this.read=data?data.read:false;

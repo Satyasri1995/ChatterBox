@@ -18,7 +18,7 @@
         </span>
       </div>
       <div *ngIf="contacts.length" class="chatbox_contacts_body contact_list align-self-stretch">
-        <div *ngFor="let contact of contacts" pRipple (click)="currentChatUser=contact.user"
+        <div *ngFor="let contact of contacts" pRipple (click)="setCurrentChatUser(contact)"
           class="primary contact_list_item p-2 flex flex-row align-items-center border-bottom-1 border-gray-300">
           <div class="contact_list_item_avatar ">
             <p-avatar [label]="contact.user.mail[0]" styleClass="mr-2" size="large" shape="circle"></p-avatar>
@@ -67,7 +67,7 @@
             <div class="chatbox_messages_body_ballons_user_name flex flex-row justify-content-between align-items-end text-xs text-bold pb-2">
               <span class="text-sm mr-2">{{msg.sender.mail}}</span>
               <span>{{msg.readDate?.toLocaleString()||msg.receivedDate?.toLocaleString()||msg.sentDate?.toLocaleString()}}</span>&nbsp;&nbsp;&nbsp;
-              <i class="pi" [class.pi-check]="msg.sentDate&&(!msg.readDate && !msg.receivedDate)" [class.text-green-500]="msg.readDate && msg.receivedDate" [class.pi-check-circle]="msg.readDate || msg.receivedDate"></i>
+              <i class="pi" [class.pi-check]="msg.sent&&(!msg.read && !msg.received)" [class.text-green-500]="msg.read && msg.received" [class.pi-check-circle]="msg.read || msg.received"></i>
             </div>
             <div class="chatbox_messages_body_ballons_user_text text-sm text-base" [class.text-left]="msg.sender.id!==user.id" [class.text-right]="msg.sender.id==user.id">
               {{msg.message}}
@@ -77,7 +77,7 @@
       </div>
       <div class="chatbox_messages_body_input flex flex-row border-top-1 border-gray-300 p-fluid p-2">
         <div class="p-inputgroup">
-          <input type="text" class="p-inputtext-sm" pInputText placeholder="Your Message here">
+          <input type="text" class="p-inputtext-sm" #message (keyup.enter)="sendMessage(message.value)"  pInputText placeholder="Your Message here">
           <button type="button" class="p-button-sm" icon="pi pi-send" iconPos="left" pButton pRipple
             label="Send"></button>
         </div>
