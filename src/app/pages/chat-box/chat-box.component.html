@@ -4,7 +4,7 @@
       <div
         class="chatbox_contacts_header flex flex-row justify-content-between align-items-center p-2 border-bottom-1 border-gray-300">
         <div class="flex flex-row align-items-center">
-          <p-avatar size="large" [label]="user.mail[0]" styleClass="mr-2" [style]="{'background-color': '#9c27b0', 'color': '#ffffff'}"
+          <p-avatar size="large" label="{{user.mail|label}}" styleClass="mr-2" [style]="{'background-color': '#9c27b0', 'color': '#ffffff'}"
           shape="circle"></p-avatar>
           <div>{{user.mail}}</div>
         </div>
@@ -21,7 +21,7 @@
         <div *ngFor="let contact of contacts" pRipple (click)="setCurrentChatUser(contact)"
           class="primary contact_list_item p-2 flex flex-row align-items-center border-bottom-1 border-gray-300">
           <div class="contact_list_item_avatar ">
-            <p-avatar [label]="contact.name[0]" styleClass="mr-2" size="large" shape="circle"></p-avatar>
+            <p-avatar label="{{contact.name|label}}" styleClass="mr-2" size="large" shape="circle"></p-avatar>
           </div>
           <div
             class="contact_list_item_message flex flex-grow-1 flex-column justify-content-between align-self-stretch">
@@ -37,8 +37,8 @@
               <div class="contact_list_item_message_content_text  text-sm font-normal">
                 {{contact.lastMessage?.message}}
               </div>
-              <div class="contact_list_item_message_content_unread">
-                <p-badge value="2"></p-badge>
+              <div *ngIf="contact.unread>0" class="contact_list_item_message_content_unread">
+                <p-badge [value]="contact.unread+''"></p-badge>
               </div>
             </div>
           </div>
@@ -50,26 +50,28 @@
     </div>
     <div class="chatbox_messages flex flex-column" *ngIf="currentChatUser">
       <div class="chatbox_messages_header border-bottom-1 border-gray-300 flex flex-row p-2">
-        <p-avatar size="large" [label]="currentChatUser.mail[0]" styleClass="mr-2" shape="circle"></p-avatar>
-        <div class="chatbox_messages_header_user flex flex-column justify-content-around align-items-center">
+        <p-avatar size="large" label="{{currentChatUser.mail|label}}" styleClass="mr-2" shape="circle"></p-avatar>
+        <div class="chatbox_messages_header_user flex flex-column justify-content-around align-items-start">
           <div class="chatbox_messages_header_user_name text-xl text-medium">
             {{currentChatUser.mail}}
           </div>
           <div class="chatbox_messages_header_user_status flex flex-row">
-            <i class="pi pi-circle-fill" [class.text-red-500]="!currentChatUser.isOnline" [class.text-green-500]="currentChatUser.isOnline"></i>&nbsp;<span>Online</span>
+            <i class="pi pi-circle-fill" [class.text-red-500]="!currentChatUser.isOnline" [class.text-green-500]="currentChatUser.isOnline"></i>&nbsp;
+            <span *ngIf="currentChatUser.isOnline">Online</span>
+            <span *ngIf="!currentChatUser.isOnline">Offline</span>
           </div>
         </div>
       </div>
       <div class="chatbox_messages_body flex flex-column flex-grow-1 overflow-hidden overflow-y-auto">
         <div class="chatbox_messages_body_ballons flex flex-column   justify-content-end flex-grow-1">
-          <div *ngFor="let msg of messages" [class.bg-blue-500]="msg.sender.id!==user.id" [class.align-self-start]="msg.sender.id!==user.id" [class.align-self-end]="msg.sender.id===user.id" [class.text-white]="msg.sender.id!==user.id" [class.align-items-start]="msg.sender.id!==user.id" [class.align-items-end]="msg.sender.id===user.id"
+          <div *ngFor="let msg of messages" [class.bg-blue-500]="msg.sender?.id!==user.id" [class.align-self-start]="msg.sender?.id!==user.id" [class.align-self-end]="msg.sender?.id===user.id" [class.text-white]="msg.sender?.id!==user.id" [class.align-items-start]="msg.sender?.id!==user.id" [class.align-items-end]="msg.sender?.id===user.id"
             class="chatbox_messages_body_ballons_user p-card  shadow-3  p-2 m-2 inline-flex flex-column ">
             <div class="chatbox_messages_body_ballons_user_name flex flex-row justify-content-between align-items-end text-xs text-bold pb-2">
-              <span class="text-sm mr-2">{{msg.sender.mail}}</span>
+              <span class="text-sm mr-2">{{msg.sender?.mail}}</span>
               <span>{{msg.readDate?.toLocaleString()||msg.receivedDate?.toLocaleString()||msg.sentDate?.toLocaleString()}}</span>&nbsp;&nbsp;&nbsp;
               <i class="pi" [class.pi-check]="msg.sent&&(!msg.read && !msg.received)" [class.text-green-500]="msg.read && msg.received" [class.pi-check-circle]="msg.read || msg.received"></i>
             </div>
-            <div class="chatbox_messages_body_ballons_user_text text-sm text-base" [class.text-left]="msg.sender.id!==user.id" [class.text-right]="msg.sender.id==user.id">
+            <div class="chatbox_messages_body_ballons_user_text text-sm text-base" [class.text-left]="msg.sender?.id!==user.id" [class.text-right]="msg.sender?.id==user.id">
               {{msg.message}}
             </div>
           </div>
@@ -79,7 +81,7 @@
         <div class="p-inputgroup">
           <input type="text" class="p-inputtext-sm" #message (keyup.enter)="sendMessage(message.value)"  pInputText placeholder="Your Message here">
           <button type="button" class="p-button-sm" icon="pi pi-send" iconPos="left" pButton pRipple
-            label="Send"></button>
+            label="Send" (click)="sendMessage(message.value)"></button>
         </div>
       </div>
     </div>

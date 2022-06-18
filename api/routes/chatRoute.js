@@ -20,4 +20,18 @@ router.post(
   catchError(chatController.addContact)
 );
 
+router.post(
+  "/userDetails",
+  check("userId").isMongoId().withMessage("Invalid user id"),
+  validationController.validator,
+  catchError(chatController.getUser)
+)
+
+router.post(
+  "/messages",
+  check("conversationId").isMongoId().withMessage("Invalid conversation id"),
+  validationController.validator,
+  catchError(chatController.getConversation)
+)
+
 module.exports = router;

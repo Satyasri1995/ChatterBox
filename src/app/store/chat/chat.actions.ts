@@ -1,3 +1,4 @@
+import { IUser } from './../../Models/User';
 import { IMessage } from './../../Models/Message';
 import { IConversation } from './../../Models/Conversation';
 import { IContact } from './../../Models/Contact';
@@ -8,9 +9,19 @@ export const SelectContact = createAction(
   props<{ contact: IContact }>()
 );
 
+export const UpdateContact = createAction(
+  '[Contacts] Updating the contact',
+  props<{ contact: IContact }>()
+);
+
+export const UpdateContactUser = createAction(
+  "[Update Contact User] fetching user details of a contact",
+  props<{user:IUser}>()
+)
+
 export const UpdateMessagesRest = createAction(
   '[Messages] loading the selected contact messages',
-  props<{ id: string }>()
+  props<{ conversationId: string }>()
 );
 
 export const UpdateMessages = createAction(

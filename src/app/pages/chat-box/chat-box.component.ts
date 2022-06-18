@@ -1,3 +1,5 @@
+import { IConversation } from './../../Models/Conversation';
+
 import { environment } from './../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { SocketService } from './../../services/util/socket.service';
@@ -5,10 +7,12 @@ import {
   SelectContact,
   UpdateMessage,
   AddContactRest,
+  SendMessageRest,
 } from './../../store/chat/chat.actions';
 import {
   messageSelector,
   currentChatUserSelector,
+  ConversationSelector,
 } from './../../store/chat/chat.selectors';
 import { IUser, User } from './../../Models/User';
 import {
@@ -23,7 +27,6 @@ import { MenuItem } from 'primeng/api';
 import { AppState } from 'src/app/store/app.store';
 import { Subscription, map } from 'rxjs';
 import { IIOMessage } from 'src/app/Models/IOMessage';
-
 
 @Component({
   selector: 'app-chat-box',
@@ -44,7 +47,9 @@ export class ChatBoxComponent implements OnInit {
   messagesSub!: Subscription;
   currentChatUserSub!: Subscription;
   conversationUpdateSub!: Subscription;
-  selectedContact!:{userId:string,name:string};
+  selectedContact!: { userId: string; name: string };
+  conversationSub!: Subscription;
+  currentConversation!: IConversation;
 
   constructor(
     private store: Store<AppState>,
@@ -104,10 +109,15 @@ export class ChatBoxComponent implements OnInit {
       .subscribe((user: IUser) => {
         this.currentChatUser = user;
       });
+    this.conversationSub = this.store
+      .pipe(map((state) => ConversationSelector(state)))
+      .subscribe((conversation: IConversation) => {
+        this.currentConversation = conversation;
+      });
   }
 
-  resetSelectedContact(){
-    this.selectedContact={userId:"",name:""};
+  resetSelectedContact() {
+    this.selectedContact = { userId: '', name: '' };
   }
 
   setCurrentChatUser(contact: IContact) {
@@ -130,6 +140,9 @@ export class ChatBoxComponent implements OnInit {
     newMsg.message = message;
     newMsg.sender = this.user;
     newMsg.receiver = this.currentChatUser;
+    this.store.dispatch(
+      SendMessageRest({ conversationId: this.currentConversation.id, message: newMsg })
+    );
   }
 
   addContact() {
@@ -142,6 +155,7 @@ export class ChatBoxComponent implements OnInit {
     this.contactsSub?.unsubscribe();
     this.messagesSub?.unsubscribe();
     this.currentChatUserSub?.unsubscribe();
+    this.conversationSub?.unsubscribe();
   }
 
   ngAfterViewChecked() {

@@ -10,6 +10,7 @@ export interface IContact{
   updatedAt:Date;
   createdAt:Date;
   conversation:IConversation;
+  unread:number;
 }
 
 export class Contact{
@@ -20,6 +21,7 @@ export class Contact{
   createdAt:Date|undefined;
   conversation:IConversation|undefined;
   name:string;
+  unread:number;
   constructor(data?:IContact){
     this.id=data?data.id:"";
     this.user=data?data.user:undefined;
@@ -28,5 +30,6 @@ export class Contact{
     this.updatedAt=data?data.updatedAt:undefined;
     this.conversation=data?data.conversation:undefined;
     this.name=data?data.name:"";
+    this.unread=data?data.unread:0;
   }
 }

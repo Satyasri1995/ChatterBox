@@ -17,6 +17,10 @@ const contactSchema = new Schema({
     ref:'message',
     default:null
   },
+  unread:{
+    type:mongoose.SchemaTypes.Number,
+    default:0
+  },
   conversation:{
     type:mongoose.SchemaTypes.ObjectId,
     required:true,

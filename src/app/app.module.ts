@@ -35,6 +35,8 @@ import {ToastModule} from 'primeng/toast';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
+import { LabelPipe } from './pipes/label.pipe';
+import { UnreadPipe } from './pipes/unread.pipe';
 
 const config: SocketIoConfig = { url: environment.socket, options: {} };
 
@@ -43,7 +45,9 @@ const config: SocketIoConfig = { url: environment.socket, options: {} };
     AppComponent,
     LoginComponent,
     SignupComponent,
-    ChatBoxComponent
+    ChatBoxComponent,
+    LabelPipe,
+    UnreadPipe
   ],
   imports: [
     BrowserModule,
