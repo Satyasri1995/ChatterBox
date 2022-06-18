@@ -1,8 +1,11 @@
-import { IResponse } from './../../Models/Response';
 import { environment } from './../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { SocketService } from './../../services/util/socket.service';
-import { SelectContact, UpdateMessage } from './../../store/chat/chat.actions';
+import {
+  SelectContact,
+  UpdateMessage,
+  AddContactRest,
+} from './../../store/chat/chat.actions';
 import {
   messageSelector,
   currentChatUserSelector,
@@ -21,6 +24,7 @@ import { AppState } from 'src/app/store/app.store';
 import { Subscription, map } from 'rxjs';
 import { IIOMessage } from 'src/app/Models/IOMessage';
 
+
 @Component({
   selector: 'app-chat-box',
   templateUrl: './chat-box.component.html',
@@ -35,22 +39,29 @@ export class ChatBoxComponent implements OnInit {
   showAddContact: boolean;
   searchResult: string;
   searchResultUsers: IUser[];
-  selectedSearchUser!: IUser;
   userSub!: Subscription;
   contactsSub!: Subscription;
   messagesSub!: Subscription;
   currentChatUserSub!: Subscription;
   conversationUpdateSub!: Subscription;
+  selectedContact!:{userId:string,name:string};
 
   constructor(
     private store: Store<AppState>,
     private socketService: SocketService,
     private http: HttpClient
   ) {
+    this.resetSelectedContact();
     this.searchResultUsers = [];
     this.searchResult = 'Enter mail in above field to find contact';
     this.contactsMenuItems = [
-      { label: 'New Contact', icon: 'pi pi-fw pi-user-plus' },
+      {
+        label: 'New Contact',
+        icon: 'pi pi-fw pi-user-plus',
+        command: () => {
+          this.showAddContact = true;
+        },
+      },
       { label: 'Edit Contact', icon: 'pi pi-fw pi-user-edit' },
       { label: 'Delete Contact', icon: 'pi pi-fw pi-trash' },
     ];
@@ -62,14 +73,14 @@ export class ChatBoxComponent implements OnInit {
 
   search(query: string) {
     this.http
-      .post(environment.api + '/chat/search', { query: query })
+      .post(environment.api + '/contact/search', { query: query })
       .subscribe((response: any) => {
-        this.searchResultUsers=response.data;
+        this.searchResultUsers = response.data;
       });
   }
 
-  onSelected(event: IUser) {
-    this.selectedSearchUser = event;
+  onSelected(user: IUser) {
+    this.selectedContact.userId = user.id;
   }
 
   ngOnInit(): void {
@@ -95,6 +106,10 @@ export class ChatBoxComponent implements OnInit {
       });
   }
 
+  resetSelectedContact(){
+    this.selectedContact={userId:"",name:""};
+  }
+
   setCurrentChatUser(contact: IContact) {
     this.store.dispatch(SelectContact({ contact: contact }));
     this.reSubScribeConversationUpdate(contact.conversation.id);
@@ -115,6 +130,11 @@ export class ChatBoxComponent implements OnInit {
     newMsg.message = message;
     newMsg.sender = this.user;
     newMsg.receiver = this.currentChatUser;
+  }
+
+  addContact() {
+    console.log(this.selectedContact);
+    this.store.dispatch(AddContactRest(this.selectedContact));
   }
 
   ngOnDestroy() {

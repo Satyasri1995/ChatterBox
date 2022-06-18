@@ -5,6 +5,7 @@ import { IMessage } from "./Message";
 export interface IContact{
   id:string;
   user:IUser;
+  name:string;
   lastMessage:IMessage;
   updatedAt:Date;
   createdAt:Date;
@@ -18,6 +19,7 @@ export class Contact{
   updatedAt:Date|undefined;
   createdAt:Date|undefined;
   conversation:IConversation|undefined;
+  name:string;
   constructor(data?:IContact){
     this.id=data?data.id:"";
     this.user=data?data.user:undefined;
@@ -25,5 +27,6 @@ export class Contact{
     this.createdAt=data?data.createdAt:undefined;
     this.updatedAt=data?data.updatedAt:undefined;
     this.conversation=data?data.conversation:undefined;
+    this.name=data?data.name:"";
   }
 }

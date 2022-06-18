@@ -1,4 +1,4 @@
-import { AuthLogin, AuthLogout } from './auth.actions';
+import { AuthLogin, AuthLogout, UpdateUser } from './auth.actions';
 
 
 import { createReducer, on } from '@ngrx/store';
@@ -19,5 +19,11 @@ export const AuthReducer = createReducer(
   }),
   on(AuthLogout,(_state)=>{
     return initialState;
+  }),
+  on(UpdateUser,(state,payload)=>{
+    return {
+      ...state,
+      user:payload.user
+    }
   })
 )

@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  api:"http://localhost:3000/ChatterBox"
+  api:"http://localhost:3000/ChatterBox",
+  socket:"http://localhost:3000"
 };
 
 /*

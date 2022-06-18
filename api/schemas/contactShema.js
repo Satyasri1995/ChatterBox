@@ -14,7 +14,8 @@ const contactSchema = new Schema({
   },
   lastMessage:{
     type:mongoose.SchemaTypes.ObjectId,
-    ref:'message'
+    ref:'message',
+    default:null
   },
   conversation:{
     type:mongoose.SchemaTypes.ObjectId,

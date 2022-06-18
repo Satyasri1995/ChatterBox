@@ -1,3 +1,6 @@
+import { ChatEffects } from './store/chat/chat.effects';
+import { environment } from './../environments/environment';
+import { SocketService } from './services/util/socket.service';
 import { UIEffects } from './store/ui/ui.effects';
 import { AuthEffects } from './store/auth/auth.effects';
 import { AppReducer } from './store/app.store';
@@ -31,6 +34,9 @@ import { HttpErrorInterceptor } from './services/util/http-interceptors';
 import {ToastModule} from 'primeng/toast';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
+import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
+
+const config: SocketIoConfig = { url: environment.socket, options: {} };
 
 @NgModule({
   declarations: [
@@ -58,8 +64,9 @@ import { EffectsModule } from '@ngrx/effects';
     MenuModule,
     BadgeModule,
     HttpClientModule,
+    SocketIoModule.forRoot(config),
     StoreModule.forRoot(AppReducer),
-    EffectsModule.forRoot([AuthEffects,UIEffects])
+    EffectsModule.forRoot([AuthEffects,UIEffects,ChatEffects])
   ],
   providers: [
     ConfirmationService,
@@ -76,7 +83,8 @@ import { EffectsModule } from '@ngrx/effects';
       provide: ErrorHandler,
       useClass: MyErrorHandler,
     },
-    MessageService
+    MessageService,
+    SocketService
   ],
   bootstrap: [AppComponent]
 })

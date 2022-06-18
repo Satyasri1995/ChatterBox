@@ -27,3 +27,8 @@ export const SendMessageRest = createAction(
   '[Sending Message] Sending the message to tthe other user',
   props<{ conversationId: string; message: IMessage }>()
 );
+
+export const AddContactRest = createAction(
+  `[Adding Contact] Adding the selected contact to the contact list`,
+  props<{userId:string,name:string}>()
+);

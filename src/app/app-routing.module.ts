@@ -1,3 +1,4 @@
+import { AuthGuard } from './services/guards/auth-guard.service';
 import { ChatBoxComponent } from './pages/chat-box/chat-box.component';
 import { LoginComponent } from './pages/login/login.component';
 import { NgModule } from '@angular/core';
@@ -8,7 +9,7 @@ const routes: Routes = [
   {path:"",redirectTo:"ChatterBox/login",pathMatch:"full"},
   {path:"ChatterBox/login",component:LoginComponent},
   {path:"ChatterBox/signup",component:SignupComponent},
-  {path:"ChatterBox/chatBox",component:ChatBoxComponent}
+  {path:"ChatterBox/chatBox",canActivate:[AuthGuard],component:ChatBoxComponent}
 ];
 
 @NgModule({

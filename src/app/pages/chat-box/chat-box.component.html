@@ -21,21 +21,21 @@
         <div *ngFor="let contact of contacts" pRipple (click)="setCurrentChatUser(contact)"
           class="primary contact_list_item p-2 flex flex-row align-items-center border-bottom-1 border-gray-300">
           <div class="contact_list_item_avatar ">
-            <p-avatar [label]="contact.user.mail[0]" styleClass="mr-2" size="large" shape="circle"></p-avatar>
+            <p-avatar [label]="contact.name[0]" styleClass="mr-2" size="large" shape="circle"></p-avatar>
           </div>
           <div
             class="contact_list_item_message flex flex-grow-1 flex-column justify-content-between align-self-stretch">
             <div class="contact_list_item_message_author flex flex-row justify-content-between">
               <div class="contact_list_item_message_author_name  text-xl font-medium">
-                {{contact.user.mail}}
+                {{contact.name}}
               </div>
               <div class="contact_list_item_message_author_time text-xs font-normal">
-                {{contact.lastMessage.receivedDate?.toLocaleString()}}
+                {{contact.lastMessage?.receivedDate?.toLocaleString()}}
               </div>
             </div>
             <div class="contact_list_item_message_content flex flex-row justify-content-between">
               <div class="contact_list_item_message_content_text  text-sm font-normal">
-                {{contact.lastMessage.message}}
+                {{contact.lastMessage?.message}}
               </div>
               <div class="contact_list_item_message_content_unread">
                 <p-badge value="2"></p-badge>
@@ -91,12 +91,16 @@
 
 
 <p-menu #contactsMenu [popup]="true" [model]="contactsMenuItems"></p-menu>
-<p-dialog header="Add Contact" id="contact" [(visible)]="showAddContact">
+<p-dialog header="Add Contact" id="contact" [(visible)]="showAddContact" (onHide)="resetSelectedContact()">
   <div class="flex flex-column p-fluid" style="width: 20rem;">
     <div class="field">
       <label for="username" class="block">E-Mail</label>
       <p-autoComplete [showEmptyMessage]="true" emptyMessage="No records found." field="mail" (onSelect)="onSelected($event)"  [suggestions]="searchResultUsers" (completeMethod)="search($event.query)"></p-autoComplete>
     </div>
-    <button pButton icon="pi pi-plus" iconPos="left" type="button" label="Add Contact" [disabled]="!selectedSearchUser"></button>
+    <div *ngIf="selectedContact.userId" class="field">
+      <label for="username" class="block">Name</label>
+      <input type="text" pInputText [(ngModel)]="selectedContact.name">
+    </div>
+    <button pButton icon="pi pi-plus" iconPos="left" type="button" (click)="addContact()" label="Add Contact" [disabled]="!selectedContact.userId||!selectedContact.name"></button>
   </div>
 </p-dialog>
