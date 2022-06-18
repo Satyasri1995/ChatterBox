@@ -1,0 +1,19 @@
+* 4a9e744 (HEAD -> master, origin/master) add message socket events2
+* 8ca7c2f add message socket events
+* a27930c add chat selectors
+* b8c2208 resolved reducer issue
+* 1a296da models remodeled
+* bc23faf auth completed
+* 11daf6b auth
+* d74f278 ..
+* 9bc9b6a added socket connection
+* e2167a9 added contcts bckend
+* f45c801 added schemas
+* 1c0b307 added nodesetup partially
+* e7a69f0 added store setup
+* 0f38899 added add contact
+* 7943ee1 added tick notification
+* cd2f339 added baloon messages
+* 7c4a123 chatbox contacts list ui added
+* 236675b added login and signup pages
+* a578a8d initial commit

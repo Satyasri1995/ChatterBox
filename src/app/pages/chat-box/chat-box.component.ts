@@ -1,3 +1,6 @@
+import { IResponse } from './../../Models/Response';
+import { environment } from './../../../environments/environment';
+import { HttpClient } from '@angular/common/http';
 import { SocketService } from './../../services/util/socket.service';
 import { SelectContact, UpdateMessage } from './../../store/chat/chat.actions';
 import {
@@ -41,7 +44,8 @@ export class ChatBoxComponent implements OnInit {
 
   constructor(
     private store: Store<AppState>,
-    private socketService: SocketService
+    private socketService: SocketService,
+    private http: HttpClient
   ) {
     this.searchResultUsers = [];
     this.searchResult = 'Enter mail in above field to find contact';
@@ -56,7 +60,13 @@ export class ChatBoxComponent implements OnInit {
     this.showAddContact = false;
   }
 
-  search(query: string) {}
+  search(query: string) {
+    this.http
+      .post(environment.api + '/chat/search', { query: query })
+      .subscribe((response: any) => {
+        this.searchResultUsers=response.data;
+      });
+  }
 
   onSelected(event: IUser) {
     this.selectedSearchUser = event;
@@ -96,7 +106,7 @@ export class ChatBoxComponent implements OnInit {
       .getSocket()
       .fromEvent<IIOMessage>(`conversation:${id}:update`)
       .subscribe((ioMessage: IIOMessage) => {
-        this.store.dispatch(UpdateMessage({message:ioMessage.message}));
+        this.store.dispatch(UpdateMessage({ message: ioMessage.message }));
       });
   }
 
