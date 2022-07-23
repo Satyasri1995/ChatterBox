@@ -8,7 +8,7 @@
           shape="circle"></p-avatar>
           <div>{{user.mail}}</div>
         </div>
-        <a class="p-2 primary options" (click)="contactsMenu.toggle($event)" pRipple><i
+        <a class="p-2 primary options" (click)="menu.toggle($event)" pRipple><i
             class="pi pi-ellipsis-v"></i></a>
       </div>
       <div class="chatbox_contacts_search p-fluid p-2 border-bottom-1 border-gray-300">
@@ -18,7 +18,7 @@
         </span>
       </div>
       <div *ngIf="contacts.length" class="chatbox_contacts_body contact_list align-self-stretch">
-        <div *ngFor="let contact of contacts" pRipple (click)="setCurrentChatUser(contact)"
+        <div *ngFor="let contact of contacts" pRipple (click)="setCurrentChatUser(contact)" #contact
           class="primary contact_list_item p-2 flex flex-row align-items-center border-bottom-1 border-gray-300">
           <div class="contact_list_item_avatar ">
             <p-avatar label="{{contact.name|label}}" styleClass="mr-2" size="large" shape="circle"></p-avatar>
@@ -91,8 +91,34 @@
   </div>
 </div>
 
+<p-dialog header="Edit Contact" id="contact" [(visible)]="showEditContact" (onHide)="resetSelectedContact()">
+  <div class="flex flex-column p-fluid" style="width: 20rem;">
+    <div class="field">
+      <label for="username" class="block">E-Mail</label>
+      <p-autoComplete [showEmptyMessage]="true" emptyMessage="No records found." field="mail" (onSelect)="onSelected($event)"  [suggestions]="searchResultUsers" (completeMethod)="search($event.query)"></p-autoComplete>
+    </div>
+    <div *ngIf="selectedContact.userId" class="field">
+      <label for="username" class="block">Name</label>
+      <input type="text" pInputText [disabled]="false" [(ngModel)]="selectedContact.name">
+    </div>
+    <button pButton icon="pi pi-save" iconPos="left" type="button" (click)="EditContact()" label="Save Contact" [disabled]="!selectedContact.userId||!selectedContact.name"></button>
+  </div>
+</p-dialog>
 
-<p-menu #contactsMenu [popup]="true" [model]="contactsMenuItems"></p-menu>
+<p-dialog header="Delete Contact" id="contact" [(visible)]="showDeleteContact" (onHide)="resetSelectedContact()">
+  <div class="flex flex-column p-fluid" style="width: 20rem;">
+    <div class="field">
+      <label for="username" class="block">E-Mail</label>
+      <p-autoComplete [showEmptyMessage]="true" emptyMessage="No records found." field="mail" (onSelect)="onSelected($event)"  [suggestions]="searchResultUsers" (completeMethod)="search($event.query)"></p-autoComplete>
+    </div>
+    <div *ngIf="selectedContact.userId" class="field">
+      <label for="username" class="block">Name</label>
+      <input type="text" pInputText [disabled]="true" [(ngModel)]="selectedContact.name">
+    </div>
+    <button pButton icon="pi pi-save" iconPos="left" type="button" (click)="deleteContact()" label="Delete Contact" [disabled]="!selectedContact.userId||!selectedContact.name"></button>
+  </div>
+</p-dialog>
+
 <p-dialog header="Add Contact" id="contact" [(visible)]="showAddContact" (onHide)="resetSelectedContact()">
   <div class="flex flex-column p-fluid" style="width: 20rem;">
     <div class="field">
@@ -103,6 +129,8 @@
       <label for="username" class="block">Name</label>
       <input type="text" pInputText [(ngModel)]="selectedContact.name">
     </div>
-    <button pButton icon="pi pi-plus" iconPos="left" type="button" (click)="addContact()" label="Add Contact" [disabled]="!selectedContact.userId||!selectedContact.name"></button>
+    <button pButton icon="pi pi-save" iconPos="left" type="button" (click)="addContact()" label="Add Contact" [disabled]="!selectedContact.userId||!selectedContact.name"></button>
   </div>
 </p-dialog>
+
+<p-menu #menu [popup]="true" [model]="contactsMenuItems"></p-menu>

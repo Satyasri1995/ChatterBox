@@ -13,9 +13,14 @@ import {
   AddContactRest,
   UpdateContactUser,
   UpdateContact,
+  EditContactRest,
+  DeleteContactRest,
+  SendMessageRest,
 } from './chat.actions';
 import { IMessage } from 'src/app/Models/Message';
 import { User } from 'src/app/Models/User';
+import { Toast } from 'src/app/Models/Toast';
+import { ShowToast } from '../ui/ui.actions';
 
 @Injectable()
 export class ChatEffects {
@@ -35,11 +40,16 @@ export class ChatEffects {
           })
           .pipe(
             mergeMap((response: any) => {
-              return [
-                UpdateMessages({
-                  conversation: new Conversation(response.data),
-                }),
-              ];
+              let toast = new Toast(response);
+              toast.show = true;
+              if (response.status) {
+                return [
+                  UpdateMessages({
+                    conversation: new Conversation(response.data),
+                  }),
+                ];
+              }
+              return [ShowToast({ toast: toast })];
             })
           );
       })
@@ -79,13 +89,18 @@ export class ChatEffects {
             userId: payload.contact.user,
           })
           .pipe(
-            mergeMap((response:any)=>{
-              const con=payload.contact.conversation+"";
-              return [
-                UpdateContact({contact:payload.contact}),
-                UpdateContactUser({user:response.data}),
-                UpdateMessagesRest({conversationId:con})
-              ]
+            mergeMap((response: any) => {
+              let toast = new Toast(response);
+              toast.show = true;
+              if (response.status) {
+                const con = payload.contact.conversation + '';
+                return [
+                  UpdateContact({ contact: payload.contact }),
+                  UpdateContactUser({ user: response.data }),
+                  UpdateMessagesRest({ conversationId: con }),
+                ];
+              }
+              return [ShowToast({ toast: toast })];
             })
           );
       })
@@ -103,10 +118,78 @@ export class ChatEffects {
           })
           .pipe(
             mergeMap((response: any) => {
-              return [UpdateUser({ user: new User(response.data) })];
+              let toast = new Toast(response);
+              toast.show = true;
+              if (response.status) {
+                return [UpdateUser({ user: new User(response.data) })];
+              }
+              return [ShowToast({ toast: toast })];
             })
           );
       })
     );
   });
+
+  EditContact = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(EditContactRest),
+      switchMap((payload) => {
+        return this.http
+          .post(environment.api + '/contact/editContact', {
+            userId: payload.userId,
+            name: payload.name,
+          })
+          .pipe(
+            mergeMap((response: any) => {
+              let toast = new Toast(response);
+              toast.show = true;
+              if (response.status) {
+                return [UpdateUser({ user: new User(response.data) })];
+              }
+              return [ShowToast({ toast: toast })];
+            })
+          );
+      })
+    );
+  });
+
+  DeleteContact = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(DeleteContactRest),
+      switchMap((payload) => {
+        return this.http
+          .post(environment.api + '/contact/deleteContact', {
+            userId: payload.userId,
+            name: payload.name,
+          })
+          .pipe(
+            mergeMap((response: any) => {
+              let toast = new Toast(response);
+              toast.show = true;
+              if (response.status) {
+                return [UpdateUser({ user: new User(response.data) })];
+              }
+              return [ShowToast({ toast: toast })];
+            })
+          );
+      })
+    );
+  });
+
+  SendingMessageRest = createEffect(
+    () => {
+      return this.actions$.pipe(
+        ofType(SendMessageRest),
+        tap((payload) => {
+          const socket = this.socketService.getSocket();
+          const { conversationId, message } = payload;
+          socket.emit('message:send', {
+            conversationId: conversationId,
+            message: message,
+          });
+        })
+      );
+    },
+    { dispatch: false }
+  );
 }

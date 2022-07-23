@@ -1,4 +1,7 @@
-* 4a9e744 (HEAD -> master, origin/master) add message socket events2
+* f9e2aee (HEAD -> master, origin/master) fixing send message
+* 58d4f77 addContact finished
+* 80e4aeb added search
+* 4a9e744 add message socket events2
 * 8ca7c2f add message socket events
 * a27930c add chat selectors
 * b8c2208 resolved reducer issue

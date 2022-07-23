@@ -21,7 +21,7 @@ export class UIEffects{
         let toast:IToast=new Toast(payload.toast);
         if(toast.show){
           this.msg.clear();
-          if(toast.data.length){
+          if(toast.data?.length){
             toast.key="multipleError"
           }
           this.msg.add(toast);

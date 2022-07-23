@@ -21,6 +21,22 @@ router.post(
 );
 
 router.post(
+  "/editContact",
+  check("userId").isMongoId().withMessage("Invalid user id"),
+  check("name").isString().withMessage("Invalid Username"),
+  validationController.validator,
+  catchError(chatController.editContact)
+);
+
+router.post(
+  "/deleteContact",
+  check("userId").isMongoId().withMessage("Invalid user id"),
+  check("name").isString().withMessage("Invalid Username"),
+  validationController.validator,
+  catchError(chatController.deleteContact)
+);
+
+router.post(
   "/userDetails",
   check("userId").isMongoId().withMessage("Invalid user id"),
   validationController.validator,

@@ -8,6 +8,7 @@ import { ErrorHandler, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './pages/login/login.component';
@@ -16,6 +17,8 @@ import { SignupComponent } from './pages/signup/signup.component';
 import {CardModule} from 'primeng/card';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {InputTextModule} from 'primeng/inputtext';
+import {ContextMenuModule} from 'primeng/contextmenu';
+
 import {PasswordModule} from 'primeng/password';
 import {ButtonModule} from 'primeng/button';
 import { ChatBoxComponent } from './pages/chat-box/chat-box.component';
@@ -70,7 +73,8 @@ const config: SocketIoConfig = { url: environment.socket, options: {} };
     HttpClientModule,
     SocketIoModule.forRoot(config),
     StoreModule.forRoot(AppReducer),
-    EffectsModule.forRoot([AuthEffects,UIEffects,ChatEffects])
+    EffectsModule.forRoot([AuthEffects,UIEffects,ChatEffects]),
+    ContextMenuModule
   ],
   providers: [
     ConfirmationService,

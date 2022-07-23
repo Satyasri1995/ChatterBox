@@ -43,3 +43,13 @@ export const AddContactRest = createAction(
   `[Adding Contact] Adding the selected contact to the contact list`,
   props<{userId:string,name:string}>()
 );
+
+export const EditContactRest = createAction(
+  `[Editing Contact] editing the selected contact to the contact list`,
+  props<{userId:string,name:string}>()
+)
+
+export const DeleteContactRest = createAction(
+  `[Delete Contact] delete the selected contact to the contact list`,
+  props<{userId:string,name:string}>()
+)

@@ -10,6 +10,8 @@ export class SocketService {
   constructor(private socket:Socket) { }
 
   public receiveMessage = this.socket.fromEvent<IIOMessage>("message:receive");
+  public errorMessage = this.socket.fromEvent<string>('message:error');
+
 
   sendMessage(ioMessage:IIOMessage){
     this.socket.emit("message:send",ioMessage);

@@ -4,7 +4,7 @@ const UserShemaModel = require("../schemas/userSchema");
 
 exports.receiveMessageFromClient=async(socket,data,io)=>{
 
-  const conversation = await ConverstionSchemaModel.findById(data.conversation);
+  const conversation = await ConverstionSchemaModel.findById(data.conversationId);
   const message = new Message(data.message);
   message.sent=true;
   message.sentDate=Date.now();

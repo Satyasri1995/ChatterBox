@@ -1,3 +1,5 @@
+import { ShowToast } from './../../store/ui/ui.actions';
+import { Toast } from 'src/app/Models/Toast';
 import { IConversation } from './../../Models/Conversation';
 
 import { environment } from './../../../environments/environment';
@@ -8,6 +10,8 @@ import {
   UpdateMessage,
   AddContactRest,
   SendMessageRest,
+  EditContactRest,
+  DeleteContactRest,
 } from './../../store/chat/chat.actions';
 import {
   messageSelector,
@@ -47,9 +51,12 @@ export class ChatBoxComponent implements OnInit {
   messagesSub!: Subscription;
   currentChatUserSub!: Subscription;
   conversationUpdateSub!: Subscription;
+  messageErrorSub!: Subscription;
   selectedContact!: { userId: string; name: string };
   conversationSub!: Subscription;
   currentConversation!: IConversation;
+  showEditContact: boolean;
+  showDeleteContact: boolean;
 
   constructor(
     private store: Store<AppState>,
@@ -61,19 +68,33 @@ export class ChatBoxComponent implements OnInit {
     this.searchResult = 'Enter mail in above field to find contact';
     this.contactsMenuItems = [
       {
-        label: 'New Contact',
+        label: 'Add Contact',
         icon: 'pi pi-fw pi-user-plus',
         command: () => {
           this.showAddContact = true;
         },
       },
-      { label: 'Edit Contact', icon: 'pi pi-fw pi-user-edit' },
-      { label: 'Delete Contact', icon: 'pi pi-fw pi-trash' },
+      {
+        label: 'Edit Contact',
+        icon: 'pi pi-fw pi-user-edit',
+        command: () => {
+          this.showEditContact = true;
+        },
+      },
+      {
+        label: 'Delete Contact',
+        icon: 'pi pi-fw pi-user-minus',
+        command: () => {
+          this.showDeleteContact = true;
+        },
+      },
     ];
     this.contacts = [];
     this.messages = [];
     this.user = new User();
     this.showAddContact = false;
+    this.showEditContact = false;
+    this.showDeleteContact = false;
   }
 
   search(query: string) {
@@ -114,6 +135,16 @@ export class ChatBoxComponent implements OnInit {
       .subscribe((conversation: IConversation) => {
         this.currentConversation = conversation;
       });
+    this.messageErrorSub = this.socketService.errorMessage.subscribe(
+      (error) => {
+        const toast = new Toast();
+        toast.severity = 'error';
+        toast.detail = error;
+        toast.show = true;
+        toast.summary = 'Error';
+        this.store.dispatch(ShowToast({ toast: toast }));
+      }
+    );
   }
 
   resetSelectedContact() {
@@ -141,13 +172,26 @@ export class ChatBoxComponent implements OnInit {
     newMsg.sender = this.user;
     newMsg.receiver = this.currentChatUser;
     this.store.dispatch(
-      SendMessageRest({ conversationId: this.currentConversation.id, message: newMsg })
+      SendMessageRest({
+        conversationId: this.currentConversation.id,
+        message: newMsg,
+      })
     );
   }
 
   addContact() {
-    console.log(this.selectedContact);
     this.store.dispatch(AddContactRest(this.selectedContact));
+    this.showAddContact = false;
+  }
+
+  EditContact() {
+    this.store.dispatch(EditContactRest(this.selectedContact));
+    this.showEditContact = false;
+  }
+
+  deleteContact() {
+    this.store.dispatch(DeleteContactRest(this.selectedContact));
+    this.showDeleteContact = true;
   }
 
   ngOnDestroy() {
@@ -156,6 +200,7 @@ export class ChatBoxComponent implements OnInit {
     this.messagesSub?.unsubscribe();
     this.currentChatUserSub?.unsubscribe();
     this.conversationSub?.unsubscribe();
+    this.messageErrorSub?.unsubscribe();
   }
 
   ngAfterViewChecked() {
