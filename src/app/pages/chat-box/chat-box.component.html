@@ -29,13 +29,10 @@
               <div class="contact_list_item_message_author_name  text-xl font-medium">
                 {{contact.name}}
               </div>
-              <div class="contact_list_item_message_author_time text-xs font-normal">
-                {{contact.lastMessage?.receivedDate?.toLocaleString()}}
-              </div>
             </div>
             <div class="contact_list_item_message_content flex flex-row justify-content-between">
               <div class="contact_list_item_message_content_text  text-sm font-normal">
-                {{contact.lastMessage?.message}}
+                {{contact.lastMessage}}
               </div>
               <div *ngIf="contact.unread>0" class="contact_list_item_message_content_unread">
                 <p-badge [value]="contact.unread+''"></p-badge>
@@ -53,25 +50,22 @@
         <p-avatar size="large" label="{{currentChatUser.mail|label}}" styleClass="mr-2" shape="circle"></p-avatar>
         <div class="chatbox_messages_header_user flex flex-column justify-content-around align-items-start">
           <div class="chatbox_messages_header_user_name text-xl text-medium">
-            {{currentChatUser.mail}}
+            {{selectedContact.name}}
           </div>
           <div class="chatbox_messages_header_user_status flex flex-row">
-            <i class="pi pi-circle-fill" [class.text-red-500]="!currentChatUser.isOnline" [class.text-green-500]="currentChatUser.isOnline"></i>&nbsp;
-            <span *ngIf="currentChatUser.isOnline">Online</span>
-            <span *ngIf="!currentChatUser.isOnline">Offline</span>
+            {{selectedContact.lastMessage}}
           </div>
         </div>
       </div>
       <div class="chatbox_messages_body flex flex-column flex-grow-1 overflow-hidden overflow-y-auto">
         <div class="chatbox_messages_body_ballons flex flex-column   justify-content-end flex-grow-1">
-          <div *ngFor="let msg of messages" [class.bg-blue-500]="msg.sender?.id!==user.id" [class.align-self-start]="msg.sender?.id!==user.id" [class.align-self-end]="msg.sender?.id===user.id" [class.text-white]="msg.sender?.id!==user.id" [class.align-items-start]="msg.sender?.id!==user.id" [class.align-items-end]="msg.sender?.id===user.id"
+          <div *ngFor="let msg of messages" [class.bg-blue-500]="msg.sender?.id!==user.id" [class.align-self-start]="msg.sender?.id===user.id" [class.align-self-end]="msg.sender?.id!==user.id" [class.text-white]="msg.sender?.id!==user.id" [class.align-items-start]="msg.sender?.id!==user.id" [class.align-items-end]="msg.sender?.id!==user.id"
             class="chatbox_messages_body_ballons_user p-card  shadow-3  p-2 m-2 inline-flex flex-column ">
             <div class="chatbox_messages_body_ballons_user_name flex flex-row justify-content-between align-items-end text-xs text-bold pb-2">
-              <span class="text-sm mr-2">{{msg.sender?.mail}}</span>
-              <span>{{msg.readDate?.toLocaleString()||msg.receivedDate?.toLocaleString()||msg.sentDate?.toLocaleString()}}</span>&nbsp;&nbsp;&nbsp;
-              <i class="pi" [class.pi-check]="msg.sent&&(!msg.read && !msg.received)" [class.text-green-500]="msg.read && msg.received" [class.pi-check-circle]="msg.read || msg.received"></i>
+              <span class="text-sm mr-2">{{msg.sender?.id!==user.id?selectedContact.name:'You'}}</span>
+              <span>{{msg.sentDate|mydate}}</span>
             </div>
-            <div class="chatbox_messages_body_ballons_user_text text-sm text-base" [class.text-left]="msg.sender?.id!==user.id" [class.text-right]="msg.sender?.id==user.id">
+            <div class="chatbox_messages_body_ballons_user_text text-sm text-base" [class.text-left]="msg.sender?.id===user.id" [class.text-right]="msg.sender?.id!==user.id">
               {{msg.message}}
             </div>
           </div>
@@ -79,7 +73,7 @@
       </div>
       <div class="chatbox_messages_body_input flex flex-row border-top-1 border-gray-300 p-fluid p-2">
         <div class="p-inputgroup">
-          <input type="text" class="p-inputtext-sm" #message (keyup.enter)="sendMessage(message.value)"  pInputText placeholder="Your Message here">
+          <input type="text" id="messageInput" class="p-inputtext-sm" #message (keyup.enter)="sendMessage(message.value)"  pInputText placeholder="Your Message here">
           <button type="button" class="p-button-sm" icon="pi pi-send" iconPos="left" pButton pRipple
             label="Send" (click)="sendMessage(message.value)"></button>
         </div>

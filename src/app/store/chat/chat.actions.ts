@@ -6,7 +6,7 @@ import { createAction, props } from '@ngrx/store';
 
 export const SelectContact = createAction(
   '[Contacts] Selecting the contact',
-  props<{ contact: IContact }>()
+  props<{ contact: IContact,userId:string }>()
 );
 
 export const UpdateContact = createAction(
@@ -21,12 +21,12 @@ export const UpdateContactUser = createAction(
 
 export const UpdateMessagesRest = createAction(
   '[Messages] loading the selected contact messages',
-  props<{ conversationId: string }>()
+  props<{ conversationId: string,userId:string }>()
 );
 
 export const UpdateMessages = createAction(
   '[Messages] loading the selected contact messages into state',
-  props<{ conversation: IConversation }>()
+  props<{ conversation: IConversation,userId:string }>()
 );
 
 export const UpdateMessage = createAction(

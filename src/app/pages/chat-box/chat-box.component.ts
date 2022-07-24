@@ -30,7 +30,7 @@ import { Component, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { AppState } from 'src/app/store/app.store';
 import { Subscription, map } from 'rxjs';
-import { IIOMessage } from 'src/app/Models/IOMessage';
+import { SetLastMessage } from 'src/app/store/auth/auth.actions';
 
 @Component({
   selector: 'app-chat-box',
@@ -52,7 +52,7 @@ export class ChatBoxComponent implements OnInit {
   currentChatUserSub!: Subscription;
   conversationUpdateSub!: Subscription;
   messageErrorSub!: Subscription;
-  selectedContact!: { userId: string; name: string };
+  selectedContact!: { userId: string; name: string ,lastMessage:string,id:string};
   conversationSub!: Subscription;
   currentConversation!: IConversation;
   showEditContact: boolean;
@@ -120,11 +120,7 @@ export class ChatBoxComponent implements OnInit {
       .subscribe((contacts: IContact[]) => {
         this.contacts = contacts;
       });
-    this.messagesSub = this.store
-      .pipe(map((state) => messageSelector(state)))
-      .subscribe((messages: IMessage[]) => {
-        this.messages = messages;
-      });
+
     this.currentChatUserSub = this.store
       .pipe(map((state) => currentChatUserSelector(state)))
       .subscribe((user: IUser) => {
@@ -134,6 +130,7 @@ export class ChatBoxComponent implements OnInit {
       .pipe(map((state) => ConversationSelector(state)))
       .subscribe((conversation: IConversation) => {
         this.currentConversation = conversation;
+        this.messages=conversation.messages;
       });
     this.messageErrorSub = this.socketService.errorMessage.subscribe(
       (error) => {
@@ -145,25 +142,28 @@ export class ChatBoxComponent implements OnInit {
         this.store.dispatch(ShowToast({ toast: toast }));
       }
     );
+    this.socketService.getSocket().on("room:update",(data:any) => {
+      this.store.dispatch(UpdateMessage({ message: data.message }));
+      this.selectedContact.lastMessage=data.message.message;
+      const cId = this.contacts.findIndex(c=>c.id==this.selectedContact.id);
+      if(cId>=0){
+        this.store.dispatch(SetLastMessage({idx:cId,message:data.message.message}))
+      }
+    })
   }
 
   resetSelectedContact() {
-    this.selectedContact = { userId: '', name: '' };
+    this.selectedContact = { userId: '', name: '' ,lastMessage:"",id:""};
   }
 
   setCurrentChatUser(contact: IContact) {
-    this.store.dispatch(SelectContact({ contact: contact }));
-    this.reSubScribeConversationUpdate(contact.conversation.id);
-  }
-
-  reSubScribeConversationUpdate(id: string) {
-    this.conversationUpdateSub?.unsubscribe();
-    this.conversationUpdateSub = this.socketService
-      .getSocket()
-      .fromEvent<IIOMessage>(`conversation:${id}:update`)
-      .subscribe((ioMessage: IIOMessage) => {
-        this.store.dispatch(UpdateMessage({ message: ioMessage.message }));
-      });
+    if (this.currentChatUser?.id !== contact.id) {
+      this.selectedContact.name=contact.name;
+      this.selectedContact.id=contact.id;
+      this.socketService.leaveRoom(contact.conversation);
+      this.store.dispatch(SelectContact({ contact: contact ,userId:this.user.id}));
+      this.socketService.joinRoom(contact.conversation);
+    }
   }
 
   sendMessage(message: string) {
@@ -177,6 +177,8 @@ export class ChatBoxComponent implements OnInit {
         message: newMsg,
       })
     );
+    let input = document.getElementById("messageInput") as HTMLInputElement;
+    input.value="";
   }
 
   addContact() {

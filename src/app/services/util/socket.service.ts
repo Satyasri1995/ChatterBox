@@ -1,3 +1,4 @@
+import { IMessage } from 'src/app/Models/Message';
 import { IIOMessage } from './../../Models/IOMessage';
 import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
@@ -9,8 +10,17 @@ export class SocketService {
 
   constructor(private socket:Socket) { }
 
-  public receiveMessage = this.socket.fromEvent<IIOMessage>("message:receive");
   public errorMessage = this.socket.fromEvent<string>('message:error');
+
+  joinRoom(conversationId:any){
+    this.socket.emit("joinRoom",`conversation:${conversationId}`);
+  }
+
+  leaveRoom(conversationId:any){
+    this.socket.emit("leaveRoom",`conversation:${conversationId}`)
+  }
+
+
 
 
   sendMessage(ioMessage:IIOMessage){

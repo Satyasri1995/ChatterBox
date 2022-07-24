@@ -40,12 +40,13 @@ export class ChatEffects {
           })
           .pipe(
             mergeMap((response: any) => {
-              let toast = new Toast(response);
+              let toast = new Toast(response.data);
               toast.show = true;
               if (response.status) {
                 return [
                   UpdateMessages({
                     conversation: new Conversation(response.data),
+                    userId:payload.userId
                   }),
                 ];
               }
@@ -56,29 +57,7 @@ export class ChatEffects {
     );
   });
 
-  updatingMessageStatus = createEffect(
-    () => {
-      return this.actions$.pipe(
-        ofType(UpdateMessages),
-        tap((payload) => {
-          const socket = this.socketService.getSocket();
-          payload.conversation.messages.forEach((message: IMessage) => {
-            if (!message.read || !message.received) {
-              socket.emit('message:receive', {
-                conversation: payload.conversation.id,
-                message: message,
-              });
-              socket.emit('message:read', {
-                conversation: payload.conversation.id,
-                message: message,
-              });
-            }
-          });
-        })
-      );
-    },
-    { dispatch: false }
-  );
+
 
   getContactUserDetails = createEffect(() => {
     return this.actions$.pipe(
@@ -97,7 +76,7 @@ export class ChatEffects {
                 return [
                   UpdateContact({ contact: payload.contact }),
                   UpdateContactUser({ user: response.data }),
-                  UpdateMessagesRest({ conversationId: con }),
+                  UpdateMessagesRest({ conversationId: con,userId:payload.userId }),
                 ];
               }
               return [ShowToast({ toast: toast })];

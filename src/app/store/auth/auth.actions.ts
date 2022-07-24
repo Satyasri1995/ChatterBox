@@ -24,4 +24,9 @@ export const UpdateUser = createAction(
   props<{user:IUser}>()
 )
 
+export const SetLastMessage = createAction(
+  `[Last Message] set the last message`,
+  props<{idx:number,message:string}>()
+)
+
 export const AuthLogout = createAction('[Logout] logout user');

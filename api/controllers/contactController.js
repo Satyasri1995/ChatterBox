@@ -10,7 +10,7 @@ exports.userSearch = async (req, res) => {
   const suggestedUsers = await UserSchemaModel.find({
     mail: { $regex: query, $options: "i" },
     _id: { $ne: req.session.user._id },
-  }).populate("contacts.user","name");
+  }).populate("contacts.user", "name").exec();
   if (suggestedUsers) {
     return res.json(
       new Response(
@@ -38,7 +38,10 @@ exports.getUser = async (req, res) => {
 
 exports.getConversation = async (req, res) => {
   const conversationId = req.body.conversationId;
-  const conversation = await ConverstionSchemaModel.findById(conversationId);
+  const conversation = await ConverstionSchemaModel.findById(conversationId)
+    .populate("messages.receiver").select("--messages.receiver.password")
+    .populate("messages.sender").select("--messages.receiver.password")
+    .exec();
   if (conversation) {
     return res.json(
       new Response(true, null, null, null, new Conversation(conversation))

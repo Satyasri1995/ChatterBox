@@ -40,6 +40,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
 import { LabelPipe } from './pipes/label.pipe';
 import { UnreadPipe } from './pipes/unread.pipe';
+import { DatePipe } from './pipes/date.pipe';
 
 const config: SocketIoConfig = { url: environment.socket, options: {} };
 
@@ -50,7 +51,8 @@ const config: SocketIoConfig = { url: environment.socket, options: {} };
     SignupComponent,
     ChatBoxComponent,
     LabelPipe,
-    UnreadPipe
+    UnreadPipe,
+    DatePipe
   ],
   imports: [
     BrowserModule,

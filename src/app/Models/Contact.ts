@@ -6,7 +6,7 @@ export interface IContact{
   id:string;
   user:IUser;
   name:string;
-  lastMessage:IMessage;
+  lastMessage:string;
   updatedAt:Date;
   createdAt:Date;
   conversation:IConversation;
@@ -16,7 +16,7 @@ export interface IContact{
 export class Contact{
   id:string;
   user:IUser|undefined;
-  lastMessage:IMessage|undefined;
+  lastMessage:string|undefined;
   updatedAt:Date|undefined;
   createdAt:Date|undefined;
   conversation:IConversation|undefined;

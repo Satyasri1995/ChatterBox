@@ -2,64 +2,57 @@ const Message = require("../models/message");
 const ConverstionSchemaModel = require("../schemas/converstionSchema");
 const UserShemaModel = require("../schemas/userSchema");
 
-exports.receiveMessageFromClient=async(socket,data,io)=>{
+exports.joinRoom = async (socket, data, io) => {
+  socket.join(data);
+};
 
-  const conversation = await ConverstionSchemaModel.findById(data.conversationId);
+exports.leaveRoom = async (socket, data, io) => {
+  socket.leave(data);
+};
+
+exports.receiveMessageFromClient = async (socket, data, io) => {
+  const conversation = await ConverstionSchemaModel.findById(
+    data.conversationId
+  );
   const message = new Message(data.message);
-  message.sent=true;
-  message.sentDate=Date.now();
-  if(conversation){
-    const user = await UserShemaModel.findById(message.sender.id);
+  const rawMessage = data.message;
+  message.sent = true;
+  message.sentDate = Date.now();
+  let contactIndex;
+  let user;
+  if (conversation) {
+    user = await UserShemaModel.findById(message.sender);
     conversation.messages.push(message);
-    const count=conversation.messages.reduce((count,value)=>(value.read?count+1:count),0);
-    const contactIndex=user.contacts.findIndex((contact)=>contact.conversation===conversation._id);
-    user.contacts[contactIndex].unread=count;
-    await user.save();
-  }else{
-    socket.emit("message:error","message failed");
+    const count = conversation.messages.reduce(
+      (count, value) => (!value.read ? count + 1 : count),
+      0
+    );
+    contactIndex = user.contacts.findIndex(
+      (contact) => contact.conversation == conversation.id
+    );
+    user.contacts[contactIndex].unread = count;
+    user.contacts[contactIndex].lastMessage = message.message;
+    user = await user.save();
+    let otherUser = await UserShemaModel.findById(message.receiver);
+    const idx = otherUser.contacts.findIndex(
+      (contact) => contact.conversation == conversation.id
+    );
+    otherUser.contacts[idx].lastMessage = message.message;
+    otherUser = await otherUser.save();
+  } else {
+    socket.emit("message:error", "message failed");
   }
   const updatedConversation = await conversation.save();
-  if(updatedConversation){
-    io.to(`conversation:${data.conversation}:update`,{conversation:data.conversation,message:message});
-  }else{
-    socket.emit("message:error","message failed");
+  if (updatedConversation) {
+    rawMessage.id =
+      updatedConversation.messages[updatedConversation.messages.length - 1]._id;
+    rawMessage.sent = message.sent;
+    rawMessage.sentDate = message.sentDate;
+    io.to(`conversation:${data.conversationId}`).emit(`room:update`, {
+      conversationId: data.conversationId,
+      message: rawMessage,
+    });
+  } else {
+    socket.emit("message:error", "message failed");
   }
-}
-
-exports.receiveNotifyReceiveMessageFromClient=async(socket,data,io)=>{
-
-  const conversation = await ConverstionSchemaModel.findById(data.conversation);
-  const message = new Message(data.message);
-  message.received=true;
-  message.receivedDate=Date.now();
-  if(conversation){
-    conversation.messages.push(message);
-  }else{
-    socket.emit("message:error","message failed");
-  }
-  const updatedConversation = await conversation.save();
-  if(updatedConversation){
-    io.to(`conversation:${data.conversation}:update`,{conversation:data.conversation,message:message});
-  }else{
-    socket.emit("message:error","message failed");
-  }
-}
-
-exports.receiveNotifyReadMessageFromClient=async(socket,data,io)=>{
-
-  const conversation = await ConverstionSchemaModel.findById(data.conversation);
-  const message = new Message(data.message);
-  message.read=true;
-  message.readDate=Date.now();
-  if(conversation){
-    conversation.messages.push(message);
-  }else{
-    socket.emit("message:error","message failed");
-  }
-  const updatedConversation = await conversation.save();
-  if(updatedConversation){
-    io.to(`conversation:${data.conversation}:update`,{conversation:data.conversation,message:message});
-  }else{
-    socket.emit("message:error","message failed");
-  }
-}
+};

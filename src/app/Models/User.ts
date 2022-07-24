@@ -14,8 +14,8 @@ export class User{
   isOnline:boolean;
   contacts:IContact[];
   constructor(data?:IUser){
+    this.id=data?data.id:"";
     this.mail=data?data.mail:"";
-    this.id=data?data.mail:"";
     this.isOnline=data?data.isOnline:false;
     this.contacts=data?data.contacts:[];
   }

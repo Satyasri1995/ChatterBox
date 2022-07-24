@@ -1,12 +1,12 @@
 const User = require("./user");
 
-class Message {
+class Message2 {
   constructor(data) {
     this.id=data?data._id||data.id:"";
-    this.sender=data.sender._id||data.sender.id;
+    this.sender=data?new User(data.sender):undefined;
     this.sent=data.sent;
     this.sentDate=data.sentDate;
-    this.receiver=data.receiver._id||data.receiver.id;
+    this.receiver=data?new User(data.receiver):undefined;
     this.received=data.received;
     this.receivedDate=data.receivedDate;
     this.read=data.read;
@@ -14,6 +14,4 @@ class Message {
     this.message=data.message;
   }
 }
-module.exports=Message;
-
-
+module.exports=Message2;

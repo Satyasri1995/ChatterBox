@@ -1,4 +1,5 @@
-import { AuthLogin, AuthLogout, UpdateUser } from './auth.actions';
+
+import { AuthLogin, AuthLogout, SetLastMessage, UpdateUser } from './auth.actions';
 
 
 import { createReducer, on } from '@ngrx/store';
@@ -24,6 +25,20 @@ export const AuthReducer = createReducer(
     return {
       ...state,
       user:payload.user
+    }
+  }),
+  on(SetLastMessage,(state,payload)=>{
+    let contacts =[...state.user.contacts];
+    contacts=contacts.map((item)=>{
+      return {...item}
+    })
+    contacts[payload.idx].lastMessage=payload.message;
+    return {
+      ...state,
+      user:{
+        ...state.user,
+        contacts:contacts
+      }
     }
   })
 )

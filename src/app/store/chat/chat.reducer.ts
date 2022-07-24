@@ -1,3 +1,4 @@
+import { Message } from './../../Models/Message';
 import { IContact } from './../../Models/Contact';
 import { UpdateContact, UpdateMessage, UpdateMessages, UpdateContactUser } from './chat.actions';
 import { createReducer, on } from '@ngrx/store';
@@ -34,12 +35,19 @@ export const ChatReducer = createReducer(
     }
   }),
   on(UpdateMessage,(state,payload)=>{
-    const msgIdx = state.conversation.messages.findIndex((msg)=>msg.id===payload.message.id);
+    const messages = [...state.conversation.messages.map(msg=>new Message(msg))];
+    const msgIdx = messages.findIndex((msg)=>msg.id===payload.message.id);
     if(msgIdx>=0){
-      state.conversation.messages[msgIdx]=payload.message;
+      messages[msgIdx]=payload.message;
+    }else{
+      messages.push(new Message(payload.message));
     }
     return {
-      ...state
+      ...state,
+      conversation:{
+        ...state.conversation,
+        messages:messages
+      }
     }
   })
 )

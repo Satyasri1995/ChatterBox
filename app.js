@@ -10,6 +10,7 @@ const http = require("http");
 const app = express();
 const apiRoute = require("./api/apiRoute");
 const { errorControl } = require("./api/controllers/errorController");
+const {onConnectionHandler} = require('./api/onConnectionHandler');
 
 app.use(express.static(path.join(__dirname, "dist")));
 app.use(express.urlencoded({ extended: true }));
@@ -65,7 +66,7 @@ mongoose
       });
       server.listen(process.env.PORT || 3000);
       console.log("Connected to Database !...");
-     // io.on("connection", onConnectionHandler);
+     io.on("connection", onConnectionHandler);
     } else {
       console.log("Connection to Database Failed !...");
     }

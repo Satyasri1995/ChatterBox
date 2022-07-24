@@ -1,4 +1,4 @@
-import { IUser } from "./User";
+import { IUser, User } from "./User";
 
 export interface IMessage{
   id:string;
@@ -26,10 +26,10 @@ export class Message{
   message:string;
   constructor(data?:IMessage){
     this.id=data?data.id:"";
-    this.sender=data?.sender;
+    this.sender=data?new User(data.sender):undefined;
     this.sent=data?data.sent:false;
     this.sentDate=data?data.sentDate:undefined;
-    this.receiver=data?.receiver;
+    this.receiver=data?(new User(data.receiver)):undefined;
     this.received=data?data.received:false;
     this.receivedDate=data?data.receivedDate:undefined;
     this.read=data?data.read:false;

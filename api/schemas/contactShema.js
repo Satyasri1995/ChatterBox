@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const timestamp = require('mongoose-timestamp');
+const messageSchema = require("./messageSchema");
 const Schema = mongoose.Schema;
 
 const contactSchema = new Schema({
@@ -13,9 +14,9 @@ const contactSchema = new Schema({
     required:true
   },
   lastMessage:{
-    type:mongoose.SchemaTypes.ObjectId,
-    ref:'message',
-    default:null
+    type:String,
+    default:"",
+    required:true
   },
   unread:{
     type:mongoose.SchemaTypes.Number,
