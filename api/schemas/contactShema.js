@@ -15,8 +15,7 @@ const contactSchema = new Schema({
   },
   lastMessage:{
     type:String,
-    default:"",
-    required:true
+    default:""
   },
   unread:{
     type:mongoose.SchemaTypes.Number,
